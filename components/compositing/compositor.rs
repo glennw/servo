@@ -633,6 +633,7 @@ impl<Window: WindowMethods> IOCompositor<Window> {
         self.window.set_page_url(url);
     }
 
+    #[allow(unsafe_code)]
     fn set_frame_tree(&mut self,
                       frame_tree: &SendableFrameTree,
                       response_chan: Sender<()>,
@@ -643,6 +644,12 @@ impl<Window: WindowMethods> IOCompositor<Window> {
         self.pending_subpages.clear();
 
         self.root_pipeline = Some(frame_tree.pipeline.clone());
+
+        if let Some(ref webrender_api) = self.webrender_api {
+            // TODO: Remove this unsafe block!
+            let pipeline_id = unsafe { std_mem::transmute(frame_tree.pipeline.id) };
+            webrender_api.set_root_pipeline(pipeline_id);
+        }
 
         // If we have an old root layer, release all old tiles before replacing it.
         let old_root_layer = self.scene.root.take();
