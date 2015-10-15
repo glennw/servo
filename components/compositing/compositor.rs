@@ -35,7 +35,7 @@ use msg::constellation_msg::{NavigationDirection, PipelineId, WindowSizeData};
 use pipeline::CompositionPipeline;
 use profile_traits::mem::{self, ReportKind, Reporter, ReporterRequest};
 use profile_traits::time::{self, ProfilerCategory, profile};
-use script_traits::{ConstellationControlMsg, LayoutControlMsg};
+use script_traits::{CompositorEvent, ConstellationControlMsg, LayoutControlMsg};
 use scrolling::ScrollingTimerProxy;
 use std::collections::hash_map::Entry::{Occupied, Vacant};
 use std::collections::{HashMap, HashSet};
@@ -1095,6 +1095,32 @@ impl<Window: WindowMethods> IOCompositor<Window> {
             MouseWindowEvent::MouseDown(_, p) => p,
             MouseWindowEvent::MouseUp(_, p) => p,
         };
+
+        if let Some(ref webrender_api) = self.webrender_api {
+            if let Some(root_pipeline_id) = self.get_root_pipeline_id() {
+                if let Some(root_pipeline) = self.pipeline(root_pipeline_id) {
+                    let translated_point =
+                        webrender_api.translate_point_to_layer_space(&point.to_untyped());
+                    let event_to_send = match mouse_window_event {
+                        MouseWindowEvent::Click(button, _) => {
+                            CompositorEvent::ClickEvent(button, translated_point)
+                        }
+                        MouseWindowEvent::MouseDown(button, _) => {
+                            CompositorEvent::MouseDownEvent(button, translated_point)
+                        }
+                        MouseWindowEvent::MouseUp(button, _) => {
+                            CompositorEvent::MouseUpEvent(button, translated_point)
+                        }
+                    };
+                    root_pipeline.script_chan
+                                 .send(ConstellationControlMsg::SendEvent(root_pipeline_id,
+                                                                          event_to_send))
+                                 .unwrap();
+                    return;
+                }
+            }
+        }
+
         match self.find_topmost_layer_at_point(point / self.scene.scale) {
             Some(result) => result.layer.send_mouse_event(self, mouse_window_event, result.point),
             None => {},
@@ -1102,6 +1128,21 @@ impl<Window: WindowMethods> IOCompositor<Window> {
     }
 
     fn on_mouse_window_move_event_class(&self, cursor: TypedPoint2D<DevicePixel, f32>) {
+        if let Some(ref webrender_api) = self.webrender_api {
+            if let Some(root_pipeline_id) = self.get_root_pipeline_id() {
+                if let Some(root_pipeline) = self.pipeline(root_pipeline_id) {
+                    let translated_point =
+                        webrender_api.translate_point_to_layer_space(&cursor.to_untyped());
+                    let event_to_send = CompositorEvent::MouseMoveEvent(translated_point);
+                    root_pipeline.script_chan
+                                 .send(ConstellationControlMsg::SendEvent(root_pipeline_id,
+                                                                          event_to_send))
+                                 .unwrap();
+                    return;
+                }
+            }
+        }
+
         match self.find_topmost_layer_at_point(cursor / self.scene.scale) {
             Some(result) => result.layer.send_mouse_move_event(self, result.point),
             None => {},
@@ -1787,6 +1828,10 @@ impl<Window: WindowMethods> IOCompositor<Window> {
 
             None => None,
         }
+    }
+
+    fn get_root_pipeline_id(&self) -> Option<PipelineId> {
+        self.scene.root.as_ref().map(|root_layer| root_layer.extra_data.borrow().pipeline_id)
     }
 
     pub fn cache_unused_buffers(&mut self, buffers: Vec<Box<LayerBuffer>>) {
