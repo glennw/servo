@@ -2070,6 +2070,7 @@ pub trait WebRenderStackingContextConverter {
                             api: &webrender::RenderApi,
                             pipeline_id: webrender::PipelineId,
                             epoch: webrender::Epoch,
+                            scroll_layer_id: Option<webrender::ScrollLayerId>,
                             iframes: &mut Vec<(PipelineId, Rect<Au>)>) -> webrender::StackingContext;
 }
 
@@ -2264,29 +2265,18 @@ impl WebRenderStackingContextConverter for StackingContext {
                             api: &webrender::RenderApi,
                             pipeline_id: webrender::PipelineId,
                             epoch: webrender::Epoch,
+                            scroll_layer_id: Option<webrender::ScrollLayerId>,
                             iframes: &mut Vec<(PipelineId, Rect<Au>)>) -> webrender::StackingContext {
-        //panic!("todo - for now only create a root scrolling layer!");
-        let scroll_layer_id = None;
-        /*
-        let scroll_layer_id = self.layer_id.map(|layer_id| {
-            let LayerId(layer_id, _, _) = layer_id;
-            webrender::ScrollLayerId::new(layer_id)
-        });
-*/
-
-/*
-        let mut opacity = 1.0;
-        for filter in &self.filters.filters {
-            match *filter {
-                Filter::Opacity(value) => {
-                    opacity = value;
-                }
-                _ => {}
+        let scroll_policy = self.layer_info
+                                .map_or(webrender::ScrollPolicy::Scrollable, |info| {
+            match info.scroll_policy {
+                ScrollPolicy::Scrollable => webrender::ScrollPolicy::Scrollable,
+                ScrollPolicy::FixedPosition => webrender::ScrollPolicy::Fixed,
             }
-        }*/
-        //println!("sc has opacity = {}", opacity);
+        });
 
         let mut sc = webrender::StackingContext::new(scroll_layer_id,
+                                                     scroll_policy,
                                                      self.bounds.to_rectf(),
                                                      self.overflow.to_rectf(),
                                                      self.z_index,
@@ -2303,14 +2293,8 @@ impl WebRenderStackingContextConverter for StackingContext {
         }
 
         for child in &self.display_list.children {
-            sc.add_stacking_context(child.convert_to_webrender(api, pipeline_id, epoch, iframes));
+            sc.add_stacking_context(child.convert_to_webrender(api, pipeline_id, epoch, None, iframes));
         }
-
-/*
-        for child in &self.display_list.layered_children {
-            sc.add_stacking_context(child.stacking_context.convert_to_webrender(api, pipeline_id, epoch, iframes));
-        }
-*/
 
         sc
     }

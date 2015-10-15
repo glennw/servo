@@ -1166,10 +1166,16 @@ impl LayoutTask {
                     let epoch = webrender::Epoch(epoch_number);
                     let pipeline_id = unsafe { transmute(self.id) };
                     let mut iframes = Vec::new();
-                    let sc = rw_data.stacking_context.as_ref().unwrap().convert_to_webrender(&self.webrender_api.as_ref().unwrap(),
-                                                                                             pipeline_id,
-                                                                                             epoch,
-                                                                                             &mut iframes);
+
+                    // TODO(gw) For now only create a root scrolling layer!
+                    let root_scroll_layer_id = webrender::ScrollLayerId(0);
+                    let sc = rw_data.stacking_context.as_ref()
+                                                     .unwrap()
+                                                     .convert_to_webrender(&self.webrender_api.as_ref().unwrap(),
+                                                                           pipeline_id,
+                                                                           epoch,
+                                                                           Some(root_scroll_layer_id),
+                                                                           &mut iframes);
                     let root_background_color = webrender::ColorF::new(root_background_color.r,
                                                                        root_background_color.g,
                                                                        root_background_color.b,

@@ -807,9 +807,12 @@ impl StackingContextLayerCreator {
     fn add_stacking_context(&mut self,
                             stacking_context: Arc<StackingContext>,
                             parent_stacking_context: &mut StackingContext) {
-        if self.all_following_children_need_layers() || stacking_context.layer_info.is_some() {
-            self.add_layered_stacking_context(stacking_context, parent_stacking_context);
-            return;
+        // webrender doesn't care about layers in the display list - it's handled internally.
+        if !opts::get().use_webrender {
+            if self.all_following_children_need_layers() || stacking_context.layer_info.is_some() {
+                self.add_layered_stacking_context(stacking_context, parent_stacking_context);
+                return;
+            }
         }
 
         parent_stacking_context.display_list.children.push_back(stacking_context);
