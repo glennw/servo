@@ -89,7 +89,7 @@ impl Window {
         let mut glutin_window = glutin::WindowBuilder::new()
                             .with_title("Servo".to_string())
                             .with_decorations(!opts::get().no_native_titlebar)
-                            .with_vsync()
+                            //.with_vsync()
                             .with_dimensions(window_size.to_untyped().width, window_size.to_untyped().height)
                             .with_gl(Window::gl_version())
                             .with_visibility(is_foreground)
@@ -332,15 +332,25 @@ impl Window {
         //
         // See https://github.com/servo/servo/issues/5780
         //
-        let first_event = self.window.poll_events().next();
+        let mut was_woken = false;
 
-        match first_event {
-            Some(event) => {
-                self.handle_window_event(event)
-            }
-            None => {
-                sleep_ms(16);
-                false
+        loop {
+            let next_event = self.window.poll_events().next();
+
+            match next_event {
+                Some(Event::Awakened(..)) => {
+                    was_woken = true;
+                    continue;
+                }
+                Some(event) => {
+                    return self.handle_window_event(event)
+                }
+                None => {
+                    if !was_woken {
+                        sleep_ms(16);
+                    }
+                    return false
+                }
             }
         }
     }
