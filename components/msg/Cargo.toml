@@ -42,6 +42,9 @@ features = ["texture_surface"]
 [dependencies.plugins]
 path = "../plugins"
 
+[dependencies.webrender]
+git = "https://github.com/glennw/webrender"
+
 [dependencies]
 app_units = {version = "0.1", features = ["plugins"]}
 bitflags = "0.3"
