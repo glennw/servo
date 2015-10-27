@@ -34,6 +34,7 @@ use util::cursor::Cursor;
 use util::geometry::ScreenPx;
 #[cfg(feature = "window")]
 use util::opts;
+use std::ffi::CStr;
 
 #[cfg(feature = "window")]
 static mut g_nested_event_loop_listener: Option<*mut (NestedEventLoopListener + 'static)> = None;
@@ -104,6 +105,13 @@ impl Window {
 
         Window::load_gl_functions(&glutin_window);
 
+        let version = unsafe {
+            let data = CStr::from_ptr(gl::GetString(gl::VERSION) as *const _).to_bytes().to_vec();
+            String::from_utf8(data).unwrap()
+        };
+
+        println!("OpenGL version {}", version);
+
         let window = Window {
             window: glutin_window,
             event_queue: RefCell::new(vec!()),
@@ -140,7 +148,7 @@ impl Window {
 
     #[cfg(not(target_os = "android"))]
     fn gl_version() -> GlRequest {
-        GlRequest::Specific(Api::OpenGl, (2, 1))
+        GlRequest::Specific(Api::OpenGl, (3, 2))
     }
 
     #[cfg(target_os = "android")]
@@ -318,15 +326,25 @@ impl Window {
         //
         // See https://github.com/servo/servo/issues/5780
         //
-        let first_event = self.window.poll_events().next();
+        let mut was_woken = false;
 
-        match first_event {
-            Some(event) => {
-                self.handle_window_event(event)
-            }
-            None => {
-                thread::sleep(Duration::from_millis(16));
-                false
+        loop {
+            let next_event = self.window.poll_events().next();
+
+            match next_event {
+                Some(Event::Awakened(..)) => {
+                    was_woken = true;
+                    continue;
+                }
+                Some(event) => {
+                    return self.handle_window_event(event)
+                }
+                None => {
+                    if !was_woken {
+                        thread::sleep(Duration::from_millis(16));
+                    }
+                    return false
+                }
             }
         }
     }

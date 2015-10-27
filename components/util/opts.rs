@@ -188,6 +188,9 @@ pub struct Opts {
 
     /// Do not use native titlebar
     pub no_native_titlebar: bool,
+
+    /// True to enable the webrender painting backend.
+    pub use_webrender: bool,
 }
 
 fn print_usage(app: &str, opts: &Options) {
@@ -488,6 +491,7 @@ pub fn default_opts() -> Opts {
         convert_mouse_to_touch: false,
         exit_after_load: false,
         no_native_titlebar: false,
+        use_webrender: false,
     }
 }
 
@@ -532,6 +536,7 @@ pub fn from_cmdline_args(args: &[String]) -> ArgumentParsingResult {
     opts.optmulti("", "pref",
                   "A preference to set to enable", "dom.mozbrowser.enabled");
     opts.optflag("b", "no-native-titlebar", "Do not use native titlebar");
+    opts.optflag("w", "webrender", "Use webrender backend");
 
     let opt_match = match opts.parse(args) {
         Ok(m) => m,
@@ -672,6 +677,8 @@ pub fn from_cmdline_args(args: &[String]) -> ArgumentParsingResult {
         (contents, url)
     }).collect();
 
+    let use_webrender = opt_match.opt_present("w") && !opt_match.opt_present("z");
+
     let opts = Opts {
         is_running_problem_test: is_running_problem_test,
         url: Some(url),
@@ -722,6 +729,7 @@ pub fn from_cmdline_args(args: &[String]) -> ArgumentParsingResult {
         convert_mouse_to_touch: debug_options.convert_mouse_to_touch,
         exit_after_load: opt_match.opt_present("x"),
         no_native_titlebar: opt_match.opt_present("b"),
+        use_webrender: use_webrender,
     };
 
     set_defaults(opts);
