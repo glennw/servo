@@ -29,10 +29,13 @@ git = "https://github.com/servo/ipc-channel"
 
 [dependencies.offscreen_gl_context]
 git = "https://github.com/ecoal95/rust-offscreen-rendering-context"
-features = ["texture_surface"]
+branch = "webrender"
 
 [dependencies.plugins]
 path = "../plugins"
+
+[dependencies.webrender_traits]
+git = "https://github.com/glennw/webrender_traits"
 
 [dependencies]
 app_units = {version = "0.1", features = ["plugins"]}
