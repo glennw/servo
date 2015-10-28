@@ -1,16 +1,8 @@
-#version 110
-
-attribute vec3 aPosition;
-attribute vec4 aColor;
-
-uniform mat4 uTransform;
-
-varying vec4 vColor;
-varying vec2 vPosition;
-
 void main(void)
 {
 	vColor = aColor;
 	vPosition = aPosition.xy;
+    vBorderPosition = aBorderPosition;
+    vBorderRadii = aBorderRadii;
     gl_Position = uTransform * vec4(aPosition, 1.0);
 }
