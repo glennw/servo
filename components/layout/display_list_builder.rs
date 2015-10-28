@@ -2373,11 +2373,12 @@ impl WebRenderDisplayItemConverter for DisplayItem {
                 }
 
                 if glyphs.len() > 0 {
+                    let font_key = webrender::FontKey::new(item.text_run.font_template.identifier.data);
                     builder.push_text(level,
                                       item.base.bounds.to_rectf(),
                                       item.base.clip.to_clip_region(),
                                       glyphs,
-                                      item.text_run.font_template.identifier.clone(),
+                                      font_key,
                                       item.text_color.to_colorf(),
                                       item.text_run.actual_pt_size,
                                       item.blur_radius);
