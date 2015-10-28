@@ -390,7 +390,7 @@ pub struct Image {
     pub format: PixelFormat,
     #[ignore_heap_size_of = "Defined in ipc-channel"]
     pub bytes: IpcSharedMemory,
-    pub id: Option<webrender::ImageID>,
+    pub id: Option<webrender::ImageKey>,
 }
 
 /// Similar to net::resource_task::LoadData
