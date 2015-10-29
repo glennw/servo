@@ -90,11 +90,11 @@ enum CacheResult {
 }
 
 impl AllPendingLoads {
-    fn new(keygen: LoadKeyGenerator) -> AllPendingLoads {
+    fn new() -> AllPendingLoads {
         AllPendingLoads {
             loads: HashMap::new(),
             url_to_load_key: HashMap::new(),
-            keygen: keygen,
+            keygen: LoadKeyGenerator::new(),
         }
     }
 
@@ -415,10 +415,7 @@ impl ImageCache {
                     let format = convert_format(image.format);
                     let mut bytes = Vec::new();
                     bytes.push_all(&*image.bytes);
-                    let LoadKey(load_key_value) = key;
-                    let image_key = webrender::ImageKey::new(load_key_value);
-                    image.id = Some(image_key);
-                    webrender_api.add_image(image_key, image.width, image.height, format, bytes);
+                    image.id = Some(webrender_api.add_image(image.width, image.height, format, bytes));
                 }
                 LoadResult::PlaceholderLoaded(..) | LoadResult::None => {}
             }
@@ -497,8 +494,6 @@ pub fn new_image_cache_task(resource_task: ResourceTask, webrender_api: Option<w
 
     spawn_named("ImageCacheThread".to_owned(), move || {
 
-        let mut keygen = LoadKeyGenerator::new();
-
         // Preload the placeholder image, used when images fail to load.
         let mut placeholder_url = resources_dir_path();
         placeholder_url.push("rippy.jpg");
@@ -515,11 +510,7 @@ pub fn new_image_cache_task(resource_task: ResourceTask, webrender_api: Option<w
                             let format = convert_format(image.format);
                             let mut bytes = Vec::new();
                             bytes.push_all(&*image.bytes);
-
-                            let LoadKey(load_key_value) = keygen.next();
-                            let image_key = webrender::ImageKey::new(load_key_value);
-                            image.id = Some(image_key);
-                            webrender_api.add_image(image_key, image.width, image.height, format, bytes);
+                            image.id = Some(webrender_api.add_image(image.width, image.height, format, bytes));
                         }
                         Some(Arc::new(image))
                     }
@@ -541,7 +532,7 @@ pub fn new_image_cache_task(resource_task: ResourceTask, webrender_api: Option<w
             decoder_sender: decoder_sender,
             decoder_receiver: decoder_receiver,
             task_pool: TaskPool::new(4),
-            pending_loads: AllPendingLoads::new(keygen),
+            pending_loads: AllPendingLoads::new(),
             completed_loads: HashMap::new(),
             resource_task: resource_task,
             placeholder_image: placeholder_image,

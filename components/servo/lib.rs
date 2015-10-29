@@ -160,13 +160,12 @@ impl Browser {
                 }
             };
 
-            let webrender = webrender::Renderer::new(render_notifier,
-                                                     size.width,
-                                                     size.height,
-                                                     device_pixel_ratio,
-                                                     resource_path);
-            let webrender_api = webrender.new_api();
-            (Some(webrender), Some(webrender_api))
+            let (webrender, api) = webrender::Renderer::new(render_notifier,
+                                                            size.width,
+                                                            size.height,
+                                                            device_pixel_ratio,
+                                                            resource_path);
+            (Some(webrender), Some(api))
         } else {
             (None, None)
         };
@@ -180,7 +179,7 @@ impl Browser {
                                                       mem_profiler_chan.clone(),
                                                       devtools_chan,
                                                       supports_clipboard,
-                                                      webrender_api);
+                                                      webrender_api.as_ref().map(|wr| wr.clone_api()));
 
         if cfg!(feature = "webdriver") {
             if let Some(port) = opts.webdriver_port {
@@ -197,6 +196,7 @@ impl Browser {
             time_profiler_chan: time_profiler_chan,
             mem_profiler_chan: mem_profiler_chan,
             webrender: webrender,
+            webrender_api: webrender_api,
         });
 
         Browser {
@@ -248,8 +248,10 @@ fn create_constellation(opts: opts::Opts,
                         webrender_api: Option<webrender::RenderApi>) -> ConstellationChan {
     let resource_task = new_resource_task(opts.user_agent.clone(), devtools_chan.clone());
 
-    let image_cache_task = new_image_cache_task(resource_task.clone(), webrender_api.clone());
-    let font_cache_task = FontCacheTask::new(resource_task.clone(), webrender_api.clone());
+    let image_cache_task = new_image_cache_task(resource_task.clone(),
+                                                webrender_api.as_ref().map(|wr| wr.clone_api()));
+    let font_cache_task = FontCacheTask::new(resource_task.clone(),
+                                             webrender_api.as_ref().map(|wr| wr.clone_api()));
     let storage_task: StorageTask = StorageTaskFactory::new();
 
     let initial_state = InitialConstellationState {

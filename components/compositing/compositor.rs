@@ -314,7 +314,6 @@ impl<Window: WindowMethods> IOCompositor<Window> {
             Some(_) => CompositeTarget::PngFile,
             None => CompositeTarget::Window
         };
-        let webrender_api = state.webrender.as_ref().map(|wr| wr.new_api());
         let native_display = window.native_display();
         IOCompositor {
             window: window,
@@ -356,7 +355,7 @@ impl<Window: WindowMethods> IOCompositor<Window> {
             surface_map: SurfaceMap::new(BUFFER_MAP_SIZE),
             pending_subpages: HashSet::new(),
             webrender: state.webrender,
-            webrender_api: webrender_api,
+            webrender_api: state.webrender_api,
         }
     }
 

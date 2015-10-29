@@ -705,7 +705,7 @@ impl LayoutTask {
                                   self.time_profiler_chan.clone(),
                                   self.mem_profiler_chan.clone(),
                                   info.layout_shutdown_chan,
-                                  self.webrender_api.clone());
+                                  self.webrender_api.as_ref().map(|wr| wr.clone_api()));
     }
 
     /// Enters a quiescent state in which no new messages will be processed until an `ExitNow` is

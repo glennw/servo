@@ -14,6 +14,7 @@ use platform::font_list::system_default_family;
 use platform::font_template::FontTemplateData;
 use std::borrow::ToOwned;
 use std::collections::HashMap;
+use std::collections::hash_map::Entry;
 use std::mem;
 use std::sync::mpsc::{Sender, Receiver, channel};
 use std::sync::{Arc, Mutex};
@@ -27,14 +28,17 @@ use webrender;
 /// A list of font templates that make up a given font family.
 struct FontFamily {
     templates: Vec<FontTemplate>,
-    webrender_api: Option<webrender::RenderApi>,
+}
+
+pub struct FontTemplateInfo {
+    pub font_template: Arc<FontTemplateData>,
+    pub font_key: Option<webrender::FontKey>,
 }
 
 impl FontFamily {
-    fn new(webrender_api: Option<webrender::RenderApi>) -> FontFamily {
+    fn new() -> FontFamily {
         FontFamily {
             templates: vec!(),
-            webrender_api: webrender_api,
         }
     }
 
@@ -74,7 +78,8 @@ impl FontFamily {
             }
         }
 
-        let template = FontTemplate::new(identifier, maybe_data, self.webrender_api.clone());
+        let template = FontTemplate::new(identifier,
+                                         maybe_data);
         self.templates.push(template);
     }
 }
@@ -90,7 +95,7 @@ pub enum Command {
 
 /// Reply messages sent from the font cache task to the FontContext caller.
 pub enum Reply {
-    GetFontTemplateReply(Option<Arc<FontTemplateData>>),
+    GetFontTemplateReply(Option<FontTemplateInfo>),
 }
 
 /// The font cache task itself. It maintains a list of reference counted
@@ -104,6 +109,7 @@ struct FontCache {
     font_context: FontContextHandle,
     resource_task: ResourceTask,
     webrender_api: Option<webrender::RenderApi>,
+    webrender_fonts: HashMap<Atom, webrender::FontKey>,
 }
 
 fn add_generic_font(generic_fonts: &mut HashMap<LowercaseString, LowercaseString>,
@@ -134,7 +140,7 @@ impl FontCache {
                 Command::AddWebFont(family_name, src, result) => {
                     let family_name = LowercaseString::new(&family_name);
                     if !self.web_families.contains_key(&family_name) {
-                        let family = FontFamily::new(self.webrender_api.clone());
+                        let family = FontFamily::new();
                         self.web_families.insert(family_name.clone(), family);
                     }
 
@@ -200,7 +206,7 @@ impl FontCache {
         for_each_available_family(|family_name| {
             let family_name = LowercaseString::new(&family_name);
             if !self.local_families.contains_key(&family_name) {
-                let family = FontFamily::new(self.webrender_api.clone());
+                let family = FontFamily::new();
                 self.local_families.insert(family_name, family);
             }
         });
@@ -252,25 +258,50 @@ impl FontCache {
         }
     }
 
+    fn get_font_template_info(&mut self, template: Arc<FontTemplateData>) -> FontTemplateInfo {
+        let font_key = if let Some(ref webrender_api) = self.webrender_api {
+            let font_key = match self.webrender_fonts.entry(template.identifier.clone()) {
+                Entry::Occupied(occupied) => {
+                    occupied.into_mut()
+                }
+                Entry::Vacant(vacant) => {
+                    let bytes = template.bytes.clone();
+                    let font_key = webrender_api.add_raw_font(bytes);
+                    vacant.insert(font_key)
+                }
+            };
+            Some(*font_key)
+        } else {
+            None
+        };
+
+        FontTemplateInfo {
+            font_template: template,
+            font_key: font_key,
+        }
+    }
+
     fn find_font_template(&mut self, family: &LowercaseString, desc: &FontTemplateDescriptor)
-                            -> Option<Arc<FontTemplateData>> {
+                            -> Option<FontTemplateInfo> {
         let transformed_family_name = self.transform_family(family);
         let mut maybe_template = self.find_font_in_web_family(&transformed_family_name, desc);
         if maybe_template.is_none() {
             maybe_template = self.find_font_in_local_family(&transformed_family_name, desc);
         }
-        maybe_template
+        maybe_template.map(|template| {
+            self.get_font_template_info(template)
+        })
     }
 
     fn last_resort_font_template(&mut self, desc: &FontTemplateDescriptor)
-                                        -> Arc<FontTemplateData> {
+                                        -> FontTemplateInfo {
         let last_resort = last_resort_font_families();
 
         for family in &last_resort {
             let family = LowercaseString::new(family);
             let maybe_font_in_family = self.find_font_in_local_family(&family, desc);
             if maybe_font_in_family.is_some() {
-                return maybe_font_in_family.unwrap();
+                return self.get_font_template_info(maybe_font_in_family.unwrap())
             }
         }
 
@@ -308,6 +339,7 @@ impl FontCacheTask {
                 font_context: FontContextHandle::new(),
                 resource_task: resource_task,
                 webrender_api: webrender_api,
+                webrender_fonts: HashMap::new(),
             };
 
             cache.refresh_local_families();
@@ -320,7 +352,7 @@ impl FontCacheTask {
     }
 
     pub fn find_font_template(&self, family: String, desc: FontTemplateDescriptor)
-                                                -> Option<Arc<FontTemplateData>> {
+                                                -> Option<FontTemplateInfo> {
 
         let (response_chan, response_port) = channel();
         self.chan.send(Command::GetFontTemplate(family, desc, response_chan)).unwrap();
@@ -335,7 +367,7 @@ impl FontCacheTask {
     }
 
     pub fn last_resort_font_template(&self, desc: FontTemplateDescriptor)
-                                                -> Arc<FontTemplateData> {
+                                                -> FontTemplateInfo {
 
         let (response_chan, response_port) = channel();
         self.chan.send(Command::GetLastResortFontTemplate(desc, response_chan)).unwrap();

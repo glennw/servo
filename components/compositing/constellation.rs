@@ -343,7 +343,7 @@ impl<LTF: LayoutTaskFactory, STF: ScriptTaskFactory> Constellation<LTF, STF> {
                 load_data: load_data,
                 device_pixel_ratio: self.window_size.device_pixel_ratio,
                 pipeline_namespace_id: self.next_pipeline_namespace_id(),
-                webrender_api: self.webrender_api.clone(),
+                webrender_api: self.webrender_api.as_ref().map(|wr| wr.clone_api()),
             });
 
         // TODO(pcwalton): In multiprocess mode, send that `PipelineContent` instance over to

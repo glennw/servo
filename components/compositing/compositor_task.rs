@@ -316,4 +316,5 @@ pub struct InitialCompositorState {
     pub mem_profiler_chan: mem::ProfilerChan,
     /// Instance of webrender API if enabled
     pub webrender: Option<webrender::Renderer>,
+    pub webrender_api: Option<webrender::RenderApi>,
 }
