@@ -66,8 +66,8 @@ impl FontTemplate {
             Some(_) => {
                 if let Some(ref webrender_api) = webrender_api {
                     let font_key = webrender::FontKey::new(identifier.data);
-                    webrender_api.add_font(font_key,
-                                           maybe_bytes.as_ref().unwrap().clone());
+                    webrender_api.add_raw_font(font_key,
+                                               maybe_bytes.as_ref().unwrap().clone());
                 }
                 Some(FontTemplateData::new(identifier.clone(), maybe_bytes))
             }
@@ -173,7 +173,7 @@ impl FontTemplate {
 
         if let Some(ref webrender_api) = self.webrender_api {
             let font_key = webrender::FontKey::new(self.identifier.data);
-            webrender_api.add_font(font_key, template_data.bytes());
+            webrender_api.add_raw_font(font_key, template_data.bytes());
         }
 
         self.weak_ref = Some(Arc::downgrade(&template_data));
