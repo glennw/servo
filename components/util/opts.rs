@@ -191,6 +191,7 @@ pub struct Opts {
 
     /// True to enable the webrender painting backend.
     pub use_webrender: bool,
+    pub webrender_stats: bool,
 }
 
 fn print_usage(app: &str, opts: &Options) {
@@ -280,6 +281,9 @@ pub struct DebugOptions {
 
     /// Load web fonts synchronously to avoid non-deterministic network-driven reflows.
     pub load_webfonts_synchronously: bool,
+
+    /// Show webrender profiling stats on screen.
+    pub webrender_stats: bool,
 }
 
 
@@ -315,6 +319,7 @@ impl DebugOptions {
                 "replace-surrogates" => debug_options.replace_surrogates = true,
                 "gc-profile" => debug_options.gc_profile = true,
                 "load-webfonts-synchronously" => debug_options.load_webfonts_synchronously = true,
+                "wr-stats" => debug_options.webrender_stats = true,
                 "" => {},
                 _ => return Err(option)
             };
@@ -361,6 +366,8 @@ pub fn print_debug_usage(app: &str) -> ! {
     print_option("gc-profile", "Log GC passes and their durations.");
     print_option("load-webfonts-synchronously",
                  "Load web fonts synchronously to avoid non-deterministic network-driven reflows");
+    print_option("wr-stats",
+                 "Show WebRender profiler on screen.");
 
     println!("");
 
@@ -492,6 +499,7 @@ pub fn default_opts() -> Opts {
         exit_after_load: false,
         no_native_titlebar: false,
         use_webrender: false,
+        webrender_stats: false,
     }
 }
 
@@ -730,6 +738,7 @@ pub fn from_cmdline_args(args: &[String]) -> ArgumentParsingResult {
         exit_after_load: opt_match.opt_present("x"),
         no_native_titlebar: opt_match.opt_present("b"),
         use_webrender: use_webrender,
+        webrender_stats: debug_options.webrender_stats,
     };
 
     set_defaults(opts);

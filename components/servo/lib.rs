@@ -169,7 +169,8 @@ impl Browser {
                                                                          size.height,
                                                                          device_pixel_ratio,
                                                                          resource_path,
-                                                                         opts.enable_text_antialiasing);
+                                                                         opts.enable_text_antialiasing,
+                                                                         opts.webrender_stats);
             (Some(webrender), Some(webrender_sender))
         } else {
             (None, None)
