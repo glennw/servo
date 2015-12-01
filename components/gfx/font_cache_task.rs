@@ -264,8 +264,11 @@ impl FontCache {
                     occupied.into_mut()
                 }
                 Entry::Vacant(vacant) => {
-                    let bytes = template.bytes();
-                    let font_key = webrender_api.add_raw_font(bytes);
+                    let font_key = match (template.bytes_if_in_memory(), template.native_font()) {
+                        (Some(bytes), _) => webrender_api.add_raw_font(bytes),
+                        (None, Some(native_font)) => webrender_api.add_native_font(native_font),
+                        (None, None) => webrender_api.add_raw_font(template.bytes().clone()),
+                    };
                     vacant.insert(font_key)
                 }
             };
