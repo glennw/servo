@@ -18,7 +18,6 @@ use glutin;
 use glutin::{Api, ElementState, Event, GlRequest, MouseButton, VirtualKeyCode, MouseScrollDelta};
 use layers::geometry::DevicePixel;
 use layers::platform::surface::NativeDisplay;
-use libc::c_void;
 #[cfg(feature = "window")]
 use msg::constellation_msg::{KeyState, NONE, CONTROL, SHIFT, ALT, SUPER};
 use msg::constellation_msg::{self, Key};
@@ -158,7 +157,7 @@ impl Window {
 
     #[cfg(not(target_os = "android"))]
     fn load_gl_functions(window: &glutin::Window) {
-        gl::load_with(|s| window.get_proc_address(s) as *const c_void);
+        gl::load_with(|s| window.get_proc_address(s) as *const _);
     }
 
     #[cfg(target_os = "android")]
