@@ -72,7 +72,7 @@ git = "https://github.com/servo/ipc-channel"
 git = "https://github.com/glennw/webrender_traits"
 
 [target.x86_64-apple-darwin.dependencies]
-core-foundation = "0.1"
+core-foundation = "0.2"
 core-graphics = "0.1"
 
 [target.i686-unknown-linux-gnu.dependencies.fontconfig]
