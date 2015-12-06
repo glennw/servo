@@ -434,9 +434,10 @@ impl WebGLRenderingContextMethods for WebGLRenderingContext {
         };
         // FIXME(simartin) Check that the defined region is inside the allocated one
         // https://github.com/servo/servo/issues/8738
-        self.ipc_renderer
-            .send(CanvasMsg::WebGL(CanvasWebGLMsg::BufferSubData(target, offset as isize, data_vec)))
-            .unwrap()
+        panic!("TODO: Disabled during rebase - not implemented in WR branch?");
+        //self.ipc_renderer
+        //    .send(CanvasMsg::WebGL(CanvasWebGLMsg::BufferSubData(target, offset as isize, data_vec)))
+        //    .unwrap()
     }
 
     // https://www.khronos.org/registry/webgl/specs/latest/1.0/#5.14.8

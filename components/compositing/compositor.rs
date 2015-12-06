@@ -29,16 +29,14 @@ use layout_traits::LayoutControlChan;
 use msg::compositor_msg::{Epoch, EventResult, FrameTreeId, LayerId, LayerKind};
 use msg::compositor_msg::{LayerProperties, ScrollPolicy};
 use msg::constellation_msg::CompositorMsg as ConstellationMsg;
-use msg::constellation_msg::{AnimationState, Image, PixelFormat};
+use msg::constellation_msg::{AnimationState, Image, PixelFormat, MouseEventType};
 use msg::constellation_msg::{Key, KeyModifiers, KeyState, LoadData, MouseButton};
 use msg::constellation_msg::{NavigationDirection, PipelineId, WindowSizeData};
 use pipeline::CompositionPipeline;
 use profile_traits::mem::{self, ReportKind, Reporter, ReporterRequest};
 use profile_traits::time::{self, ProfilerCategory, profile};
-use script_traits::CompositorEvent::{MouseMoveEvent, TouchEvent};
+use script_traits::CompositorEvent::{MouseMoveEvent, TouchEvent, MouseButtonEvent};
 use script_traits::{ConstellationControlMsg, LayoutControlMsg};
-//use script_traits::CompositorEvent::{self, MouseMoveEvent, TouchEvent};
-//use script_traits::{ConstellationControlMsg, LayoutControlMsg, MouseButton};
 use script_traits::{TouchEventType, TouchId};
 use scrolling::ScrollingTimerProxy;
 use std::collections::hash_map::Entry::{Occupied, Vacant};
@@ -1258,13 +1256,13 @@ impl<Window: WindowMethods> IOCompositor<Window> {
                         webrender_api.translate_point_to_layer_space(&point.to_untyped());
                     let event_to_send = match mouse_window_event {
                         MouseWindowEvent::Click(button, _) => {
-                            CompositorEvent::ClickEvent(button, translated_point)
+                            MouseButtonEvent(MouseEventType::Click, button, translated_point)
                         }
                         MouseWindowEvent::MouseDown(button, _) => {
-                            CompositorEvent::MouseDownEvent(button, translated_point)
+                            MouseButtonEvent(MouseEventType::MouseDown, button, translated_point)
                         }
                         MouseWindowEvent::MouseUp(button, _) => {
-                            CompositorEvent::MouseUpEvent(button, translated_point)
+                            MouseButtonEvent(MouseEventType::MouseUp, button, translated_point)
                         }
                     };
                     root_pipeline.script_chan
@@ -1293,7 +1291,7 @@ impl<Window: WindowMethods> IOCompositor<Window> {
                 if let Some(root_pipeline) = self.pipeline(root_pipeline_id) {
                     let translated_point =
                         webrender_api.translate_point_to_layer_space(&cursor.to_untyped());
-                    let event_to_send = CompositorEvent::MouseMoveEvent(Some(translated_point));
+                    let event_to_send = MouseMoveEvent(Some(translated_point));
                     root_pipeline.script_chan
                                  .send(ConstellationControlMsg::SendEvent(root_pipeline_id,
                                                                           event_to_send))

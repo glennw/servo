@@ -336,7 +336,7 @@ impl Window {
             let next_event = self.window.poll_events().next();
 
             match next_event {
-                Some(Event::Awakened(..)) => {
+                Some(Event::Awakened) => {
                     was_woken = true;
                     continue;
                 }
