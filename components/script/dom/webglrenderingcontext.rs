@@ -403,9 +403,10 @@ impl WebGLRenderingContextMethods for WebGLRenderingContext {
             }
             slice::from_raw_parts(ptr, length as usize).to_vec()
         };
-        self.ipc_renderer
-            .send(CanvasMsg::WebGL(CanvasWebGLMsg::BufferData(target, data_vec, usage)))
-            .unwrap()
+        panic!("TODO: Fix on webrender rebase");
+        //self.ipc_renderer
+        //    .send(CanvasMsg::WebGL(CanvasWebGLMsg::BufferData(target, data_vec, usage)))
+        //    .unwrap()
     }
 
     #[allow(unsafe_code)]
