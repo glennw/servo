@@ -143,9 +143,10 @@ dependencies = [
  "layers 0.2.0 (git+https://github.com/servo/rust-layers)",
  "log 0.3.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "num 0.1.27 (registry+https://github.com/rust-lang/crates.io-index)",
- "offscreen_gl_context 0.1.0 (git+https://github.com/ecoal95/rust-offscreen-rendering-context)",
+ "offscreen_gl_context 0.1.0 (git+https://github.com/ecoal95/rust-offscreen-rendering-context?branch=webrender)",
  "plugins 0.0.1",
  "util 0.0.1",
+ "webrender_traits 0.1.0 (git+https://github.com/glennw/webrender_traits)",
 ]
 
 [[package]]
@@ -158,11 +159,12 @@ dependencies = [
  "gfx_traits 0.0.1",
  "ipc-channel 0.1.0 (git+https://github.com/servo/ipc-channel)",
  "layers 0.2.0 (git+https://github.com/servo/rust-layers)",
- "offscreen_gl_context 0.1.0 (git+https://github.com/ecoal95/rust-offscreen-rendering-context)",
+ "offscreen_gl_context 0.1.0 (git+https://github.com/ecoal95/rust-offscreen-rendering-context?branch=webrender)",
  "plugins 0.0.1",
  "serde 0.6.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_macros 0.6.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "util 0.0.1",
+ "webrender_traits 0.1.0 (git+https://github.com/glennw/webrender_traits)",
 ]
 
 [[package]]
@@ -261,7 +263,7 @@ dependencies = [
  "msg 0.0.1",
  "net_traits 0.0.1",
  "num 0.1.27 (registry+https://github.com/rust-lang/crates.io-index)",
- "offscreen_gl_context 0.1.0 (git+https://github.com/ecoal95/rust-offscreen-rendering-context)",
+ "offscreen_gl_context 0.1.0 (git+https://github.com/ecoal95/rust-offscreen-rendering-context?branch=webrender)",
  "plugins 0.0.1",
  "profile_traits 0.0.1",
  "script_traits 0.0.1",
@@ -271,6 +273,8 @@ dependencies = [
  "time 0.1.34 (registry+https://github.com/rust-lang/crates.io-index)",
  "url 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "util 0.0.1",
+ "webrender 0.1.0 (git+https://github.com/glennw/webrender)",
+ "webrender_traits 0.1.0 (git+https://github.com/glennw/webrender_traits)",
 ]
 
 [[package]]
@@ -298,6 +302,15 @@ name = "core-foundation-sys"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
+ "libc 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "core-graphics"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "core-foundation 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "libc 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
@@ -623,6 +636,7 @@ dependencies = [
  "unicode-script 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "url 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "util 0.0.1",
+ "webrender_traits 0.1.0 (git+https://github.com/glennw/webrender_traits)",
 ]
 
 [[package]]
@@ -919,6 +933,7 @@ dependencies = [
  "unicode-script 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "url 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "util 0.0.1",
+ "webrender_traits 0.1.0 (git+https://github.com/glennw/webrender_traits)",
 ]
 
 [[package]]
@@ -936,6 +951,7 @@ dependencies = [
  "serde_macros 0.6.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "url 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "util 0.0.1",
+ "webrender_traits 0.1.0 (git+https://github.com/glennw/webrender_traits)",
 ]
 
 [[package]]
@@ -1072,7 +1088,7 @@ dependencies = [
  "io-surface 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "ipc-channel 0.1.0 (git+https://github.com/servo/ipc-channel)",
  "layers 0.2.0 (git+https://github.com/servo/rust-layers)",
- "offscreen_gl_context 0.1.0 (git+https://github.com/ecoal95/rust-offscreen-rendering-context)",
+ "offscreen_gl_context 0.1.0 (git+https://github.com/ecoal95/rust-offscreen-rendering-context?branch=webrender)",
  "plugins 0.0.1",
  "rustc-serialize 0.3.16 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde 0.6.1 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -1080,6 +1096,7 @@ dependencies = [
  "style_traits 0.0.1",
  "url 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "util 0.0.1",
+ "webrender_traits 0.1.0 (git+https://github.com/glennw/webrender_traits)",
 ]
 
 [[package]]
@@ -1104,6 +1121,7 @@ dependencies = [
  "url 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "util 0.0.1",
  "uuid 0.1.18 (registry+https://github.com/rust-lang/crates.io-index)",
+ "webrender_traits 0.1.0 (git+https://github.com/glennw/webrender_traits)",
 ]
 
 [[package]]
@@ -1184,7 +1202,7 @@ dependencies = [
 [[package]]
 name = "offscreen_gl_context"
 version = "0.1.0"
-source = "git+https://github.com/ecoal95/rust-offscreen-rendering-context#483abed6709570cb0930e6427455cd453363ffcd"
+source = "git+https://github.com/ecoal95/rust-offscreen-rendering-context?branch=webrender#1ffcc5061e024161a89e5f12387599f507ca5a37"
 dependencies = [
  "cgl 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "core-foundation 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -1192,7 +1210,6 @@ dependencies = [
  "gl_generator 0.4.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "gleam 0.1.20 (registry+https://github.com/rust-lang/crates.io-index)",
  "khronos_api 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "layers 0.2.0 (git+https://github.com/servo/rust-layers)",
  "log 0.3.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde 0.6.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_macros 0.6.5 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -1405,6 +1422,22 @@ version = "0.3.16"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
+name = "rustc_version"
+version = "0.1.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "semver 0.1.20 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "scoped_threadpool"
+version = "0.1.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "rustc_version 0.1.4 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
 name = "script"
 version = "0.0.1"
 dependencies = [
@@ -1429,7 +1462,7 @@ dependencies = [
  "msg 0.0.1",
  "net_traits 0.0.1",
  "num 0.1.27 (registry+https://github.com/rust-lang/crates.io-index)",
- "offscreen_gl_context 0.1.0 (git+https://github.com/ecoal95/rust-offscreen-rendering-context)",
+ "offscreen_gl_context 0.1.0 (git+https://github.com/ecoal95/rust-offscreen-rendering-context?branch=webrender)",
  "plugins 0.0.1",
  "profile_traits 0.0.1",
  "rand 0.3.12 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -1485,6 +1518,11 @@ dependencies = [
  "smallvec 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "string_cache 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
+
+[[package]]
+name = "semver"
+version = "0.1.20"
+source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "serde"
@@ -1544,7 +1582,7 @@ dependencies = [
  "msg 0.0.1",
  "net 0.0.1",
  "net_traits 0.0.1",
- "offscreen_gl_context 0.1.0 (git+https://github.com/ecoal95/rust-offscreen-rendering-context)",
+ "offscreen_gl_context 0.1.0 (git+https://github.com/ecoal95/rust-offscreen-rendering-context?branch=webrender)",
  "profile 0.0.1",
  "profile_traits 0.0.1",
  "script 0.0.1",
@@ -1553,6 +1591,8 @@ dependencies = [
  "time 0.1.34 (registry+https://github.com/rust-lang/crates.io-index)",
  "url 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "util 0.0.1",
+ "webrender 0.1.0 (git+https://github.com/glennw/webrender)",
+ "webrender_traits 0.1.0 (git+https://github.com/glennw/webrender_traits)",
 ]
 
 [[package]]
@@ -1887,6 +1927,7 @@ dependencies = [
  "string_cache 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "url 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "uuid 0.1.18 (registry+https://github.com/rust-lang/crates.io-index)",
+ "webrender_traits 0.1.0 (git+https://github.com/glennw/webrender_traits)",
 ]
 
 [[package]]
@@ -1934,6 +1975,41 @@ dependencies = [
  "byteorder 0.4.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "tempfile 1.1.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "wayland-client 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "webrender"
+version = "0.1.0"
+source = "git+https://github.com/glennw/webrender#aae4883e720898f12c0641971e2c7cc0239bc53f"
+dependencies = [
+ "app_units 0.1.4 (registry+https://github.com/rust-lang/crates.io-index)",
+ "core-graphics 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "core-text 0.1.0 (git+https://github.com/servo/core-text-rs)",
+ "euclid 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "fnv 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "freetype 0.1.0 (git+https://github.com/servo/rust-freetype)",
+ "gleam 0.1.20 (registry+https://github.com/rust-lang/crates.io-index)",
+ "ipc-channel 0.1.0 (git+https://github.com/servo/ipc-channel)",
+ "lazy_static 0.1.15 (registry+https://github.com/rust-lang/crates.io-index)",
+ "offscreen_gl_context 0.1.0 (git+https://github.com/ecoal95/rust-offscreen-rendering-context?branch=webrender)",
+ "scoped_threadpool 0.1.6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "time 0.1.34 (registry+https://github.com/rust-lang/crates.io-index)",
+ "webrender_traits 0.1.0 (git+https://github.com/glennw/webrender_traits)",
+]
+
+[[package]]
+name = "webrender_traits"
+version = "0.1.0"
+source = "git+https://github.com/glennw/webrender_traits#fec89a4aa73d685526e5233798dd236d55113dec"
+dependencies = [
+ "app_units 0.1.4 (registry+https://github.com/rust-lang/crates.io-index)",
+ "core-graphics 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "euclid 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "gleam 0.1.20 (registry+https://github.com/rust-lang/crates.io-index)",
+ "ipc-channel 0.1.0 (git+https://github.com/servo/ipc-channel)",
+ "offscreen_gl_context 0.1.0 (git+https://github.com/ecoal95/rust-offscreen-rendering-context?branch=webrender)",
+ "serde 0.6.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "serde_macros 0.6.5 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]

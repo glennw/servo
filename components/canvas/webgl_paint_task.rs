@@ -59,9 +59,6 @@ impl WebGLPaintTask {
                 message.apply(ctx);
             }
         }
-
-        // FIXME: Convert to `debug_assert!` once tests are run with debug assertions
-        assert!(gl::get_error() == gl::NO_ERROR);
     }
 
     /// Creates a new `WebGLPaintTask` and returns the out-of-process sender and the in-process

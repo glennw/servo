@@ -403,10 +403,9 @@ impl WebGLRenderingContextMethods for WebGLRenderingContext {
             }
             slice::from_raw_parts(ptr, length as usize).to_vec()
         };
-        panic!("TODO: Fix on webrender rebase");
-        //self.ipc_renderer
-        //    .send(CanvasMsg::WebGL(CanvasWebGLMsg::BufferData(target, data_vec, usage)))
-        //    .unwrap()
+        self.ipc_renderer
+            .send(CanvasMsg::WebGL(CanvasWebGLMsg::BufferData(target, data_vec, usage)))
+            .unwrap()
     }
 
     #[allow(unsafe_code)]
@@ -421,6 +420,7 @@ impl WebGLRenderingContextMethods for WebGLRenderingContext {
             Some(data) => data,
             None => return,
         };
+
         if offset < 0 {
             return self.webgl_error(InvalidValue);
         }
@@ -435,10 +435,9 @@ impl WebGLRenderingContextMethods for WebGLRenderingContext {
         };
         // FIXME(simartin) Check that the defined region is inside the allocated one
         // https://github.com/servo/servo/issues/8738
-        panic!("TODO: Disabled during rebase - not implemented in WR branch?");
-        //self.ipc_renderer
-        //    .send(CanvasMsg::WebGL(CanvasWebGLMsg::BufferSubData(target, offset as isize, data_vec)))
-        //    .unwrap()
+        self.ipc_renderer
+            .send(CanvasMsg::WebGL(CanvasWebGLMsg::BufferSubData(target, offset as isize, data_vec)))
+            .unwrap()
     }
 
     // https://www.khronos.org/registry/webgl/specs/latest/1.0/#5.14.8
