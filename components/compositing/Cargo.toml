@@ -62,6 +62,7 @@ git = "https://github.com/servo/ipc-channel"
 
 [dependencies.offscreen_gl_context]
 git = "https://github.com/ecoal95/rust-offscreen-rendering-context"
+branch = "webrender"
 
 [target.arm-linux-androideabi.dependencies.gaol]
 git = "https://github.com/pcwalton/gaol"
@@ -80,6 +81,12 @@ git = "https://github.com/pcwalton/gaol"
 
 [target.aarch64-unknown-linux-gnueabihf.dependencies.gaol]
 git = "https://github.com/pcwalton/gaol"
+
+[dependencies.webrender_traits]
+git = "https://github.com/glennw/webrender_traits"
+
+[dependencies.webrender]
+git = "https://github.com/glennw/webrender"
 
 [dependencies]
 app_units = {version = "0.1", features = ["plugins"]}
