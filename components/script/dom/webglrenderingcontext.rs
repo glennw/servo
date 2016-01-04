@@ -197,12 +197,9 @@ impl WebGLRenderingContext {
     }
 
     fn vertex_attrib(&self, indx: u32, x: f32, y: f32, z: f32, w: f32) {
-        panic!("todo");
-        /*
         self.ipc_renderer
             .send(CanvasMsg::WebGL(CanvasWebGLMsg::VertexAttrib(indx, x, y, z, w)))
             .unwrap();
-            */
     }
 }
 
@@ -239,8 +236,6 @@ impl WebGLRenderingContextMethods for WebGLRenderingContext {
     #[allow(unsafe_code)]
     // https://www.khronos.org/registry/webgl/specs/latest/1.0/#5.14.5
     fn GetBufferParameter(&self, _cx: *mut JSContext, target: u32, parameter: u32) -> JSVal {
-        panic!("todo");
-        /*
         let (sender, receiver) = ipc::channel().unwrap();
         self.ipc_renderer
             .send(CanvasMsg::WebGL(CanvasWebGLMsg::GetBufferParameter(target, parameter, sender)))
@@ -252,14 +247,11 @@ impl WebGLRenderingContextMethods for WebGLRenderingContext {
             WebGLParameter::String(_) => panic!("Buffer parameter should not be string"),
             WebGLParameter::Invalid => NullValue(),
         }
-        */
     }
 
     #[allow(unsafe_code)]
     // https://www.khronos.org/registry/webgl/specs/latest/1.0/#5.14.3
     fn GetParameter(&self, cx: *mut JSContext, parameter: u32) -> JSVal {
-        panic!("todo");
-        /*
         let (sender, receiver) = ipc::channel().unwrap();
         self.ipc_renderer
             .send(CanvasMsg::WebGL(CanvasWebGLMsg::GetParameter(parameter, sender)))
@@ -276,7 +268,7 @@ impl WebGLRenderingContextMethods for WebGLRenderingContext {
                 rval.ptr
             }
             WebGLParameter::Invalid => NullValue(),
-        }*/
+        }
     }
 
     // https://www.khronos.org/registry/webgl/specs/latest/1.0/#5.14.3
@@ -748,8 +740,6 @@ impl WebGLRenderingContextMethods for WebGLRenderingContext {
 
     // https://www.khronos.org/registry/webgl/specs/latest/1.0/#5.14.11
     fn DrawElements(&self, mode: u32, count: i32, type_: u32, offset: i64) {
-        panic!("todo");
-        /*
         let type_size = match type_ {
             constants::BYTE | constants::UNSIGNED_BYTE => 1,
             constants::SHORT | constants::UNSIGNED_SHORT => 2,
@@ -783,7 +773,7 @@ impl WebGLRenderingContextMethods for WebGLRenderingContext {
                 self.mark_as_dirty();
             },
             _ => self.webgl_error(InvalidEnum),
-        }*/
+        }
     }
 
     // https://www.khronos.org/registry/webgl/specs/latest/1.0/#5.14.10
@@ -941,12 +931,9 @@ impl WebGLRenderingContextMethods for WebGLRenderingContext {
 
     // https://www.khronos.org/registry/webgl/specs/latest/1.0/#5.14.4
     fn Scissor(&self, x: i32, y: i32, width: i32, height: i32) {
-        panic!("todo");
-        /*
         self.ipc_renderer
             .send(CanvasMsg::WebGL(CanvasWebGLMsg::Scissor(x, y, width, height)))
             .unwrap()
-            */
     }
 
     // https://www.khronos.org/registry/webgl/specs/latest/1.0/#5.14.9
