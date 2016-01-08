@@ -924,7 +924,7 @@ impl LayoutThread {
                     let pipeline_id = unsafe { transmute(self.id) };
 
                     // TODO(gw) For now only create a root scrolling layer!
-                    let root_scroll_layer_id = webrender_traits::ScrollLayerId(0);
+                    let root_scroll_layer_id = webrender_traits::ScrollLayerId::new(pipeline_id, 0);
                     let sc_id = rw_data.stacking_context.as_ref()
                                                         .unwrap()
                                                         .convert_to_webrender(&self.webrender_api.as_ref().unwrap(),
