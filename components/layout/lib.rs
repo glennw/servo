@@ -94,4 +94,5 @@ mod table_rowgroup;
 mod table_wrapper;
 mod text;
 mod traversal;
+mod webrender_helpers;
 mod wrapper;

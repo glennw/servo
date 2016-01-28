@@ -13,7 +13,7 @@ use azure::azure::AzColor;
 use canvas_traits::CanvasMsg;
 use construct::ConstructionResult;
 use context::{SharedLayoutContext, heap_size_of_local_context};
-use display_list_builder::{ToGfxColor, WebRenderStackingContextConverter};
+use display_list_builder::ToGfxColor;
 use euclid::Matrix4;
 use euclid::point::Point2D;
 use euclid::rect::Rect;
@@ -79,6 +79,7 @@ use util::opts;
 use util::thread;
 use util::thread_state;
 use util::workqueue::WorkQueue;
+use webrender_helpers::WebRenderStackingContextConverter;
 use webrender_traits;
 use wrapper::{LayoutNode, NonOpaqueStyleAndLayoutData, ServoLayoutNode, ThreadSafeLayoutNode};
 

@@ -35,7 +35,6 @@ use ipc_channel::ipc::{IpcSender, IpcSharedMemory};
 use layers::platform::surface::NativeSurface;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use std::default::Default;
-use std::fmt;
 use std::str::FromStr;
 use std::sync::mpsc::Sender;
 use util::mem::HeapSizeOf;
