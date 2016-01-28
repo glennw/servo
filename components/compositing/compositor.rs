@@ -6,8 +6,7 @@ use CompositorMsg as ConstellationMsg;
 use app_units::Au;
 use compositor_layer::{CompositorData, CompositorLayer, RcCompositorLayer, WantsScrollEventsFlag};
 use compositor_thread::{CompositorEventListener, CompositorProxy};
-use compositor_thread::{CompositorReceiver, InitialCompositorState, Msg};
-use compositor_thread::RenderListener;
+use compositor_thread::{CompositorReceiver, InitialCompositorState, Msg, RenderListener};
 use constellation::SendableFrameTree;
 use euclid::point::TypedPoint2D;
 use euclid::rect::TypedRect;
@@ -52,9 +51,9 @@ use url::Url;
 use util::geometry::{PagePx, ScreenPx, ViewportPx};
 use util::opts;
 use util::print_tree::PrintTree;
-use windowing::{self, MouseWindowEvent, WindowEvent, WindowMethods, WindowNavigateMsg};
 use webrender;
 use webrender_traits;
+use windowing::{self, MouseWindowEvent, WindowEvent, WindowMethods, WindowNavigateMsg};
 
 #[derive(Debug, PartialEq)]
 pub enum UnableToComposite {

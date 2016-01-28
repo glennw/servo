@@ -53,8 +53,7 @@ use style::properties::style_structs::Border;
 use style::properties::{self, ComputedValues};
 use style::values::RGBA;
 use style::values::computed;
-use style::values::computed::LinearGradient;
-use style::values::computed::BorderStyle;
+use style::values::computed::{BorderStyle, LinearGradient};
 use style::values::computed::{LengthOrNone, LengthOrPercentage, LengthOrPercentageOrAuto};
 use style::values::specified::{AngleOrCorner, HorizontalDirection, VerticalDirection};
 use table_cell::CollapsedBordersForCell;
@@ -2021,7 +2020,8 @@ pub trait WebRenderStackingContextConverter {
                             api: &webrender_traits::RenderApi,
                             pipeline_id: webrender_traits::PipelineId,
                             epoch: webrender_traits::Epoch,
-                            scroll_layer_id: Option<webrender_traits::ScrollLayerId>) -> webrender_traits::StackingContextId;
+                            scroll_layer_id: Option<webrender_traits::ScrollLayerId>)
+                                -> webrender_traits::StackingContextId;
 }
 
 pub trait WebRenderDisplayListConverter {
@@ -2233,7 +2233,8 @@ impl WebRenderStackingContextConverter for StackingContext {
                             api: &webrender_traits::RenderApi,
                             pipeline_id: webrender_traits::PipelineId,
                             epoch: webrender_traits::Epoch,
-                            scroll_layer_id: Option<webrender_traits::ScrollLayerId>) -> webrender_traits::StackingContextId {
+                            scroll_layer_id: Option<webrender_traits::ScrollLayerId>)
+                                -> webrender_traits::StackingContextId {
         let scroll_policy = self.layer_info
                                 .map_or(webrender_traits::ScrollPolicy::Scrollable, |info| {
             match info.scroll_policy {

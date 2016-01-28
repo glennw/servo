@@ -66,7 +66,6 @@ impl WebGLPaintThread {
                  attrs: GLContextAttributes,
                  webrender_api_sender: Option<webrender_traits::RenderApiSender>)
                  -> Result<(IpcSender<CanvasMsg>, Sender<CanvasMsg>), String> {
-        let (out_of_process_chan, out_of_process_port) = ipc::channel::<CanvasMsg>().unwrap();
         let (in_process_chan, in_process_port) = channel();
         let (result_chan, result_port) = channel();
         spawn_named("WebGLThread".to_owned(), move || {

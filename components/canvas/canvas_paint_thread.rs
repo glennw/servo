@@ -124,7 +124,8 @@ impl<'a> CanvasPaintThread<'a> {
     /// Creates a new `CanvasPaintThread` and returns the out-of-process sender and the in-process
     /// sender for it.
     pub fn start(size: Size2D<i32>,
-                 webrender_api_sender: Option<webrender_traits::RenderApiSender>) -> (IpcSender<CanvasMsg>, Sender<CanvasMsg>) {
+                 webrender_api_sender: Option<webrender_traits::RenderApiSender>)
+                    -> (IpcSender<CanvasMsg>, Sender<CanvasMsg>) {
         // TODO(pcwalton): Ask the pipeline to create this for us instead of spawning it directly.
         // This will be needed for multiprocess Servo.
         let (out_of_process_chan, out_of_process_port) = ipc::channel::<CanvasMsg>().unwrap();

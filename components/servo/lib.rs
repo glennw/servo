@@ -45,11 +45,11 @@ mod export {
     extern crate url;
 }
 
-extern crate webrender;
-extern crate webrender_traits;
-
 #[cfg(feature = "webdriver")]
 extern crate webdriver_server;
+
+extern crate webrender;
+extern crate webrender_traits;
 
 #[cfg(feature = "webdriver")]
 fn webdriver(port: u16, constellation: Sender<ConstellationMsg>) {
@@ -81,12 +81,11 @@ use profile::mem as profile_mem;
 use profile::time as profile_time;
 use profile_traits::mem;
 use profile_traits::time;
-use util::opts;
-use util::resource_files::resources_dir_path;
-
 use std::borrow::Borrow;
 use std::rc::Rc;
 use std::sync::mpsc::Sender;
+use util::opts;
+use util::resource_files::resources_dir_path;
 
 pub use _util as util;
 pub use export::canvas;

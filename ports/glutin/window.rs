@@ -24,6 +24,7 @@ use msg::constellation_msg::{self, Key};
 use net_traits::net_error_list::NetError;
 #[cfg(feature = "window")]
 use std::cell::{Cell, RefCell};
+use std::ffi::CStr;
 #[cfg(all(feature = "headless", target_os = "linux"))]
 use std::ptr;
 use std::rc::Rc;
@@ -33,7 +34,6 @@ use util::cursor::Cursor;
 use util::geometry::ScreenPx;
 #[cfg(feature = "window")]
 use util::opts;
-use std::ffi::CStr;
 
 #[cfg(feature = "window")]
 static mut g_nested_event_loop_listener: Option<*mut (NestedEventLoopListener + 'static)> = None;
