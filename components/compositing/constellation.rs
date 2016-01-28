@@ -743,8 +743,7 @@ impl<LTF: LayoutThreadFactory, STF: ScriptThreadFactory> Constellation<LTF, STF>
             // Notification that painting has finished and is requesting permission to paint.
             Request::Paint(FromPaintMsg::Failure(Failure { pipeline_id, parent_info })) => {
                 debug!("handling paint failure message from pipeline {:?}, {:?}", pipeline_id, parent_info);
-                panic!("todo - unused in WR");
-                //self.handle_failure_msg(pipeline_id, parent_info);
+                self.handle_failure_msg(pipeline_id, parent_info);
             }
 
         }
