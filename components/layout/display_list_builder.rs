@@ -36,12 +36,10 @@ use inline::{FIRST_FRAGMENT_OF_ELEMENT, InlineFlow, LAST_FRAGMENT_OF_ELEMENT};
 use ipc_channel::ipc::{self, IpcSharedMemory};
 use list_item::ListItemFlow;
 use model::{self, MaybeAuto, ToGfxMatrix};
-//use msg::compositor_msg::ScrollPolicy;
-//use msg::constellation_msg::PipelineId;
+use msg::constellation_msg::ConvertPipelineIdToWebRender;
 use net_traits::image::base::{Image, PixelFormat};
 use net_traits::image_cache_thread::UsePlaceholder;
 use std::default::Default;
-use std::mem;
 use std::sync::Arc;
 use std::{cmp, f32};
 use style::computed_values::filter::{self, Filter};
@@ -2323,7 +2321,6 @@ impl WebRenderDisplayListConverter for Box<DisplayList> {
 }
 
 impl WebRenderDisplayItemConverter for DisplayItem {
-    #[allow(unsafe_code)]
     fn convert_to_webrender(&self,
                             api: &webrender_traits::RenderApi,
                             pipeline_id: webrender_traits::PipelineId,
@@ -2458,7 +2455,7 @@ impl WebRenderDisplayItemConverter for DisplayItem {
             }
             DisplayItem::IframeClass(ref item) => {
                 let rect = item.base.bounds.to_rectf();
-                let pipeline_id = unsafe { mem::transmute(item.iframe) };
+                let pipeline_id = item.iframe.to_webrender();
                 builder.push_iframe(level,
                                     rect,
                                     item.base.clip.to_clip_region(),
