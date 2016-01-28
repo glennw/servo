@@ -26,10 +26,6 @@ pub struct WebGLPaintThread {
     data: WebGLPaintTaskData,
 }
 
-// This allows trying to create the PaintTask
-// before creating the thread
-unsafe impl Send for WebGLPaintThread {}
-
 impl WebGLPaintThread {
     fn new(size: Size2D<i32>,
            attrs: GLContextAttributes,
@@ -50,6 +46,7 @@ impl WebGLPaintThread {
     }
 
     pub fn handle_webgl_message(&self, message: CanvasWebGLMsg) {
+        debug!("WebGL message: {:?}", message);
         match self.data {
             WebGLPaintTaskData::WebRender(ref api, id) => {
                 api.send_webgl_command(id, message);

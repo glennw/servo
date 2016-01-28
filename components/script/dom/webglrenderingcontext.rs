@@ -946,12 +946,9 @@ impl WebGLRenderingContextMethods for WebGLRenderingContext {
             _ => return self.webgl_error(InvalidOperation),
         };
 
-        panic!("WR TODO");
-        /*
         self.ipc_renderer
             .send(CanvasMsg::WebGL(CanvasWebGLMsg::Uniform1f(uniform.id(), val)))
             .unwrap()
-            */
     }
 
     // https://www.khronos.org/registry/webgl/specs/latest/1.0/#5.14.10
@@ -979,12 +976,9 @@ impl WebGLRenderingContextMethods for WebGLRenderingContext {
             _ => return self.webgl_error(InvalidOperation),
         };
 
-        panic!("WR TODO");
-        /*
         self.ipc_renderer
             .send(CanvasMsg::WebGL(CanvasWebGLMsg::Uniform4f(uniform.id(), x, y, z, w)))
             .unwrap()
-            */
     }
 
     // https://www.khronos.org/registry/webgl/specs/latest/1.0/#5.14.10
