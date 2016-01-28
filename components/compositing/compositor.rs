@@ -27,7 +27,7 @@ use layers::rendergl;
 use layers::rendergl::RenderContext;
 use layers::scene::Scene;
 use layout_traits::LayoutControlChan;
-use msg::constellation_msg::{Image, PixelFormat};
+use msg::constellation_msg::{ConvertPipelineIdFromWebRender, ConvertPipelineIdToWebRender, Image, PixelFormat};
 use msg::constellation_msg::{Key, KeyModifiers, KeyState, LoadData};
 use msg::constellation_msg::{NavigationDirection, PipelineId, WindowSizeData};
 use pipeline::CompositionPipeline;
@@ -314,11 +314,10 @@ impl webrender_traits::RenderNotifier for RenderNotifier {
         self.compositor_proxy.recomposite();
     }
 
-    #[allow(unsafe_code)]
     fn pipeline_size_changed(&mut self,
                              pipeline_id: webrender_traits::PipelineId,
                              size: Option<Size2D<f32>>) {
-        let pipeline_id = unsafe { std_mem::transmute(pipeline_id) };
+        let pipeline_id = pipeline_id.from_webrender();
         let size = size.unwrap_or(Size2D::zero());
 
         self.constellation_chan.send(ConstellationMsg::FrameSize(pipeline_id,
@@ -719,7 +718,6 @@ impl<Window: WindowMethods> IOCompositor<Window> {
         self.window.set_page_url(url);
     }
 
-    #[allow(unsafe_code)]
     fn set_frame_tree(&mut self,
                       frame_tree: &SendableFrameTree,
                       response_chan: IpcSender<()>,
@@ -732,8 +730,7 @@ impl<Window: WindowMethods> IOCompositor<Window> {
         self.root_pipeline = Some(frame_tree.pipeline.clone());
 
         if let Some(ref webrender_api) = self.webrender_api {
-            // TODO: Remove this unsafe block!
-            let pipeline_id = unsafe { std_mem::transmute(frame_tree.pipeline.id) };
+            let pipeline_id = frame_tree.pipeline.id.to_webrender();
             webrender_api.set_root_pipeline(pipeline_id);
         }
 
@@ -1715,7 +1712,6 @@ impl<Window: WindowMethods> IOCompositor<Window> {
     /// Query the constellation to see if the current compositor
     /// output matches the current frame tree output, and if the
     /// associated script threads are idle.
-    #[allow(unsafe_code)]
     fn is_ready_to_paint_image_output(&mut self) -> Result<(), NotReadyToPaint> {
         match self.ready_to_save_state {
             ReadyState::Unknown => {
@@ -1756,7 +1752,7 @@ impl<Window: WindowMethods> IOCompositor<Window> {
                     }
 
                     if let Some(ref webrender) = self.webrender {
-                        let webrender_pipeline_id = unsafe { std_mem::transmute(*id) };
+                        let webrender_pipeline_id = id.to_webrender();
                         match webrender.current_epoch(webrender_pipeline_id) {
                             Some(epoch) => {
                                 let webrender_traits::Epoch(epoch) = epoch;
