@@ -19,6 +19,7 @@ extern crate log;
 extern crate num;
 extern crate offscreen_gl_context;
 extern crate util;
+extern crate webrender_traits;
 
 pub mod canvas_paint_thread;
 mod premultiplytable;
