@@ -229,6 +229,7 @@ pub struct Image {
     pub format: PixelFormat,
     #[ignore_heap_size_of = "Defined in ipc-channel"]
     pub bytes: IpcSharedMemory,
+    #[ignore_heap_size_of = "Defined in webrender_traits"]
     pub id: Option<webrender_traits::ImageKey>,
 }
 
