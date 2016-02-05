@@ -2320,12 +2320,12 @@ dependencies = [
 [[package]]
 name = "webrender"
 version = "0.1.0"
-source = "git+https://github.com/glennw/webrender#b9b25e0e9e44a9474394afc6ea19f74d15a41ee4"
+source = "git+https://github.com/glennw/webrender#d3e27cf03e46699180453fcd4f7274e48ab616d0"
 dependencies = [
- "app_units 0.1.4 (registry+https://github.com/rust-lang/crates.io-index)",
+ "app_units 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "core-graphics 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "core-text 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "euclid 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "euclid 0.6.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "fnv 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "freetype 0.1.0 (git+https://github.com/servo/rust-freetype)",
  "gleam 0.2.3 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -2341,11 +2341,11 @@ dependencies = [
 [[package]]
 name = "webrender_traits"
 version = "0.1.0"
-source = "git+https://github.com/glennw/webrender_traits#383fb9cbd59d025b290f75323f5458b56be19454"
+source = "git+https://github.com/glennw/webrender_traits#2f8e25061cc186ade40156687b0978a1ed5e7286"
 dependencies = [
- "app_units 0.1.4 (registry+https://github.com/rust-lang/crates.io-index)",
+ "app_units 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "core-graphics 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "euclid 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "euclid 0.6.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "gleam 0.2.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "ipc-channel 0.2.0 (git+https://github.com/servo/ipc-channel)",
  "offscreen_gl_context 0.1.0 (git+https://github.com/ecoal95/rust-offscreen-rendering-context)",
