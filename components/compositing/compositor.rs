@@ -269,7 +269,9 @@ pub enum CompositeTarget {
     PngFile
 }
 
-fn initialize_png(width: usize, height: usize) -> (Vec<gl::GLuint>, Vec<gl::GLuint>) {
+fn initialize_png(width: usize, height: usize) -> (Vec<gl::GLuint>,
+                                                   Vec<gl::GLuint>,
+                                                   Vec<gl::GLuint>) {
     let framebuffer_ids = gl::gen_framebuffers(1);
     gl::bind_framebuffer(gl::FRAMEBUFFER, framebuffer_ids[0]);
 
@@ -286,7 +288,23 @@ fn initialize_png(width: usize, height: usize) -> (Vec<gl::GLuint>, Vec<gl::GLui
 
     gl::bind_texture(gl::TEXTURE_2D, 0);
 
-    (framebuffer_ids, texture_ids)
+    let renderbuffer_ids = if opts::get().use_webrender {
+        let renderbuffer_ids = gl::gen_renderbuffers(1);
+        gl::bind_renderbuffer(gl::RENDERBUFFER, renderbuffer_ids[0]);
+        gl::renderbuffer_storage(gl::RENDERBUFFER,
+                                 gl::DEPTH24_STENCIL8,
+                                 width as GLsizei,
+                                 height as GLsizei);
+        gl::framebuffer_renderbuffer(gl::FRAMEBUFFER,
+                                     gl::STENCIL_ATTACHMENT,
+                                     gl::RENDERBUFFER,
+                                     renderbuffer_ids[0]);
+        renderbuffer_ids
+    } else {
+        Vec::new()
+    };
+
+    (framebuffer_ids, texture_ids, renderbuffer_ids)
 }
 
 pub fn reporter_name() -> String {
@@ -1880,8 +1898,8 @@ impl<Window: WindowMethods> IOCompositor<Window> {
             }
         }
 
-        let (framebuffer_ids, texture_ids) = match target {
-            CompositeTarget::Window => (vec!(), vec!()),
+        let (framebuffer_ids, texture_ids, renderbuffer_ids) = match target {
+            CompositeTarget::Window => (vec!(), vec!(), vec!()),
             _ => initialize_png(width, height)
         };
 
@@ -1935,7 +1953,11 @@ impl<Window: WindowMethods> IOCompositor<Window> {
         let rv = match target {
             CompositeTarget::Window => None,
             CompositeTarget::WindowAndPng => {
-                let img = self.draw_img(framebuffer_ids, texture_ids, width, height);
+                let img = self.draw_img(framebuffer_ids,
+                                        texture_ids,
+                                        renderbuffer_ids,
+                                        width,
+                                        height);
                 Some(Image {
                     width: img.width(),
                     height: img.height(),
@@ -1945,7 +1967,11 @@ impl<Window: WindowMethods> IOCompositor<Window> {
                 })
             }
             CompositeTarget::PngFile => {
-                let img = self.draw_img(framebuffer_ids, texture_ids, width, height);
+                let img = self.draw_img(framebuffer_ids,
+                                        texture_ids,
+                                        renderbuffer_ids,
+                                        width,
+                                        height);
                 let path = opts::get().output_file.as_ref().unwrap();
                 let mut file = File::create(path).unwrap();
                 DynamicImage::ImageRgb8(img).save(&mut file, ImageFormat::PNG).unwrap();
@@ -1968,6 +1994,7 @@ impl<Window: WindowMethods> IOCompositor<Window> {
     fn draw_img(&self,
                 framebuffer_ids: Vec<gl::GLuint>,
                 texture_ids: Vec<gl::GLuint>,
+                renderbuffer_ids: Vec<gl::GLuint>,
                 width: usize,
                 height: usize)
                 -> RgbImage {
@@ -1980,6 +2007,9 @@ impl<Window: WindowMethods> IOCompositor<Window> {
 
         gl::delete_buffers(&texture_ids);
         gl::delete_frame_buffers(&framebuffer_ids);
+        if opts::get().use_webrender  {
+            gl::delete_renderbuffers(&renderbuffer_ids);
+        }
 
         // flip image vertically (texture is upside down)
         let orig_pixels = pixels.clone();
