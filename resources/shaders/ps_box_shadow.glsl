@@ -2,7 +2,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-void main(void)
-{
-    oFragColor = vColor;
-}
+varying vec3 vPos;
+varying vec2 vUv;
+flat varying vec4 vColor;
+
+varying vec2 vClipPos;
+flat varying vec4 vClipRect;
+flat varying vec4 vClipParams;

@@ -4,10 +4,7 @@
 
 void main(void)
 {
-#ifdef SERVO_ES2
-    float alpha = texture(sDiffuse, vColorTexCoord.xy).a;
-#else
-    float alpha = texture(sDiffuse, vColorTexCoord.xy).r;
-#endif
-    oFragColor = vec4(vColor.xyz, vColor.w * alpha);
+    //vec4 diffuse = vec4(vColorTexCoord.xy, 0, 1);
+    vec4 diffuse = texture(sDiffuse, vColorTexCoord.xy);
+    oFragColor = vec4(1,1,1,diffuse.a);
 }
