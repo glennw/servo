@@ -56,13 +56,18 @@ varying vec4 vBlendInfo;        // TODO(gw): This can probably be packed
 #define CLIP_CORNER_BOTTOM_LEFT             uint(2)
 #define CLIP_CORNER_BOTTOM_RIGHT            uint(3)
 
+struct ClipInfo {
+    vec4 ref_point_and_width;
+    vec4 outer_inner_radii;
+};
+
 struct Primitive {
     vec4 rect;
     vec4 st;
     vec4 color0;
     vec4 color1;
     uvec4 info;
-    uvec4 clip_info;
+    ClipInfo clip;
 };
 
 struct Layer {
@@ -78,6 +83,7 @@ struct Command {
     uvec4 prim_indices;
 };
 
+/*
 struct ClipCorner {
     vec4 rect;
     vec4 outer_inner_radii;
@@ -90,7 +96,7 @@ struct Clip {
     ClipCorner top_right;
     ClipCorner bottom_left;
     ClipCorner bottom_right;
-};
+};*/
 
 layout(std140) uniform Layers {
     Layer layers[256];
@@ -104,9 +110,10 @@ layout(std140) uniform Primitives {
     Primitive primitives[512];
 };
 
+/*
 layout(std140) uniform Clips {
     Clip clips[256];
-};
+};*/
 
 #endif
 
@@ -210,6 +217,11 @@ vec3 get_layer_pos(vec2 pos, uint layer_index) {
 void write_clip(vec2 layer_pos,
                 Primitive prim,
                 out vec4 clip_info) {
+    clip_info = vec4(prim.clip.ref_point_and_width.xy,
+                     prim.clip.outer_inner_radii.xz);
+
+    //clip_info = vec4(100.0, 100.0, 50.0, 0.0);
+    /*
     if (prim.clip_info.x == INVALID_CLIP_INDEX) {
         clip_info = vec4(9e9f, 0, 0, 0);
     } else {
@@ -236,7 +248,7 @@ void write_clip(vec2 layer_pos,
                 clip_info.y = -clip_info.y;
                 break;
         }
-    }
+    }*/
 }
 
 vec4 get_rect_color(Primitive prim, vec2 f) {
@@ -281,24 +293,46 @@ void write_generic(uint prim_index,
             case PRIM_KIND_TEXT:
             case PRIM_KIND_IMAGE:
                 {
+                    vec2 st0 = prim.st.xy;
+                    vec2 st1 = prim.st.zw;
+
+                    switch (prim.info.z) {
+                        case PRIM_ROTATION_0:
+                            break;
+                        case PRIM_ROTATION_90:
+                            f = vec2(f.y, f.x);
+                            st0 = prim.st.xw;
+                            st1 = prim.st.zy;
+                            break;
+                        case PRIM_ROTATION_180:
+                            st0 = prim.st.zw;
+                            st1 = prim.st.xy;
+                            break;
+                        case PRIM_ROTATION_270:
+                            f = vec2(f.y, f.x);
+                            st0 = prim.st.zy;
+                            st1 = prim.st.xw;
+                            break;
+                    }
+
                     out_color = prim.color0;
-                    out_uv.xy = mix(prim.st.xy, prim.st.zw, f);
+                    out_uv.xy = mix(st0, st1, f);
                 }
                 break;
             case PRIM_KIND_BORDER_CORNER:
                 {
-                    switch (prim.clip_info.y) {
-                        case CLIP_CORNER_TOP_LEFT:
-                            out_info.yz = vec2(1, 1);
+                    switch (prim.info.z) {
+                        case PRIM_ROTATION_0:
+                            out_info.zw = vec2(f.y, f.x);
                             break;
-                        case CLIP_CORNER_TOP_RIGHT:
-                            out_info.yz = vec2(0, 1);
+                        case PRIM_ROTATION_90:
+                            out_info.zw = vec2(1.0 - f.x, f.y);
                             break;
-                        case CLIP_CORNER_BOTTOM_LEFT:
-                            out_info.yz = vec2(1, 0);
+                        case PRIM_ROTATION_180:
+                            out_info.zw = vec2(f.x, f.y);
                             break;
-                        case CLIP_CORNER_BOTTOM_RIGHT:
-                            out_info.yz = vec2(0, 0);
+                        case PRIM_ROTATION_270:
+                            out_info.zw = vec2(f.x, 1.0 - f.y);
                             break;
                     }
                     out_uv = prim.color0;
@@ -391,7 +425,7 @@ void main() {
     uint prim_index = cmd.prim_indices.x;
     Primitive prim = primitives[prim_index];
     vec2 f = (local_pos - prim.rect.xy) / prim.rect.zw;
-    vLayerPos.xy = f;
+    vLayerPos.xy = local_pos.xy;
 
     vBlendInfo = layer.blend_info;
 
@@ -412,6 +446,15 @@ void write_result(vec4 color) {
 }
 
 float do_clip(vec4 clip_info) {
+    vec2 ref_pos = clip_info.xy;
+    float alpha = 1.0;
+    float d = distance(ref_pos, vLayerPos.xy);
+    if (d > abs(clip_info.z) || d < abs(clip_info.w)) {
+        alpha = 0.0;
+    }
+    return alpha;
+
+    /*
     vec2 ref_pos = step(vec2(0, 0), sign(clip_info.xy));
     float alpha = 1.0;
     float d = distance(ref_pos, vLayerPos.xy);
@@ -419,6 +462,7 @@ float do_clip(vec4 clip_info) {
         alpha = 0.0;
     }
     return alpha;
+    */
 }
 
 /*
@@ -493,11 +537,7 @@ vec4 handle_prim(vec4 info,
             break;
         }
         case PRIM_KIND_BORDER_CORNER: {
-            float x1 = info.y;
-            float y1 = info.z;
-            float x2 = 1.0 - x1;
-            float y2 = 1.0 - y1;
-            float d = (vLayerPos.x - x1) * (y2 - y1) - (vLayerPos.y - y1) * (x2 - x1);
+            float d = info.z - info.w;
             result = mix(color, uv, step(0.0, d));
             break;
         }
