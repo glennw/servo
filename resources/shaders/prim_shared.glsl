@@ -546,4 +546,46 @@ vec4 handle_prim(vec4 info,
     return result;
 }
 
+/*
+    ALL:
+        float (kind)
+
+    clip:
+        vec2 (pos)
+        float (outer radius)
+        float (inner radius)
+
+    rect:
+        vec4 (color)
+            interp if using gradient, flat otherwise
+
+    text:
+        vec4 (color)
+        vec2 (uv)
+
+    image:
+        vec4 (color)
+        vec2 (uv)
+
+    border corner:
+        vec4 (color0)
+        vec4 (color1)
+        vec2 (f)
+
+    rect: 5 (9)
+    text: 7 (11)
+    image: 7 (11)
+    bc: 11 (15)
+
+    POSSIBLE:
+        misc: 1 (encode all kinds in one word)
+        clip: 4 (ellipse but no inner)
+        rect: 1
+        gradient: 2 (but what about angle gradients?)
+        text: 3
+        image: 3
+        bc: 4
+
+ */
+
 #endif
