@@ -3,6 +3,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 void main(void) {
-    vec4 c0 = handle_prim(vInfo, vColor, vUv);// * do_clip(vClipInfo);
+    vec4 c0 = handle_prim(vInfo, vColor, vUv);
     write_result(c0);
 }

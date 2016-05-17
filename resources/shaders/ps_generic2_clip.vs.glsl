@@ -14,4 +14,7 @@ void vs(Command cmd, vec2 layer_pos) {
                   vUv1,
                   vColor1,
                   vInfo1);
+
+    write_clip(layer_pos, primitives[cmd.prim_indices.x], vClipInfo0);
+    write_clip(layer_pos, primitives[cmd.prim_indices.y], vClipInfo1);
 }

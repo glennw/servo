@@ -5,11 +5,9 @@
 varying vec4 vUv0;
 varying vec4 vColor0;
 varying vec4 vInfo0;
+varying vec4 vClipInfo0;
 
 varying vec4 vUv1;
 varying vec4 vColor1;
 varying vec4 vInfo1;
-
-varying vec4 vUv2;
-varying vec4 vColor2;
-varying vec4 vInfo2;
+varying vec4 vClipInfo1;

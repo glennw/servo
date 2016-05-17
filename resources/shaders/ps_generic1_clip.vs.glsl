@@ -4,14 +4,10 @@
 
 void vs(Command cmd, vec2 layer_pos) {
     write_generic(cmd.prim_indices.x,
-                  layer_pos,
-                  vUv0,
-                  vColor0,
-                  vInfo0);
-
-    write_generic(cmd.prim_indices.y,
     			  layer_pos,
-                  vUv1,
-                  vColor1,
-                  vInfo1);
+                  vUv,
+                  vColor,
+                  vInfo);
+
+    write_clip(layer_pos, primitives[cmd.prim_indices.x], vClipInfo);
 }

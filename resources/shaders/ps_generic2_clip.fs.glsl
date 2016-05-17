@@ -2,14 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-varying vec4 vUv0;
-varying vec4 vColor0;
-varying vec4 vInfo0;
-
-varying vec4 vUv1;
-varying vec4 vColor1;
-varying vec4 vInfo1;
-
-varying vec4 vUv2;
-varying vec4 vColor2;
-varying vec4 vInfo2;
+void main(void) {
+    vec4 c0 = handle_prim(vInfo0, vColor0, vUv0) * do_clip(vClipInfo0);
+    vec4 c1 = handle_prim(vInfo1, vColor1, vUv1) * do_clip(vClipInfo1);
+    oFragColor = mix(c1, c0, c0.a);
+}

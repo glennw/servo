@@ -5,4 +5,3 @@
 varying vec4 vUv;
 varying vec4 vColor;
 varying vec4 vInfo;
-varying vec4 vClipInfo;
