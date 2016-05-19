@@ -194,9 +194,8 @@ pub struct Opts {
     /// True to show webrender profiling stats on screen.
     pub webrender_stats: bool,
 
-    /// True to show webrender profiling stats on screen.
-    pub wr_tile_size: Size2D<i32>,
-    pub allow_splitting: bool,
+    /// True to show webrender debug on screen.
+    pub webrender_debug: bool,
 
     /// True if WebRender should use multisample antialiasing.
     pub use_msaa: bool,
@@ -293,6 +292,9 @@ pub struct DebugOptions {
     /// Show webrender profiling stats on screen.
     pub webrender_stats: bool,
 
+    /// Show webrender debug on screen.
+    pub webrender_debug: bool,
+
     /// Use multisample antialiasing in WebRender.
     pub use_msaa: bool,
 
@@ -332,6 +334,7 @@ impl DebugOptions {
                 "load-webfonts-synchronously" => debug_options.load_webfonts_synchronously = true,
                 "disable-vsync" => debug_options.disable_vsync = true,
                 "wr-stats" => debug_options.webrender_stats = true,
+                "wr-debug" => debug_options.webrender_debug = true,
                 "msaa" => debug_options.use_msaa = true,
                 "full-backtraces" => debug_options.full_backtraces = true,
                 "" => {},
@@ -530,8 +533,7 @@ pub fn default_opts() -> Opts {
         render_api: DEFAULT_RENDER_API,
         profile_dir: None,
         full_backtraces: false,
-        wr_tile_size: Size2D::new(20, 30),
-        allow_splitting: true,
+        webrender_debug: false,
     }
 }
 
@@ -668,13 +670,11 @@ pub fn from_cmdline_args(args: &[String]) -> ArgumentParsingResult {
             .unwrap_or_else(|err| args_fail(&format!("Error parsing option: --device-pixel-ratio ({})", err)))
     );
 
-    let mut paint_threads = 1;
-    /*
     let mut paint_threads: usize = match opt_match.opt_str("t") {
         Some(paint_threads_str) => paint_threads_str.parse()
             .unwrap_or_else(|err| args_fail(&format!("Error parsing option: -t ({})", err))),
         None => cmp::max(num_cpus::get() * 3 / 4, 1),
-    };*/
+    };
 
     // If only the flag is present, default to a 5 second period for both profilers
     let time_profiling = if opt_match.opt_present("p") {
@@ -749,20 +749,6 @@ pub fn from_cmdline_args(args: &[String]) -> ArgumentParsingResult {
         }
         None => {
             Size2D::typed(800, 600)
-        }
-    };
-
-    let allow_splitting = !opt_match.opt_present("t");
-
-    let wr_tile_size = match opt_match.opt_str("tile") {
-        Some(res_string) => {
-            let res: Vec<i32> = res_string.split('x').map(|r| {
-                r.parse().expect("Error parsing option: --resolution")
-            }).collect();
-            Size2D::new(res[0], res[1])
-        }
-        None => {
-            Size2D::new(20, 30)
         }
     };
 
@@ -859,8 +845,7 @@ pub fn from_cmdline_args(args: &[String]) -> ArgumentParsingResult {
         use_msaa: debug_options.use_msaa,
         profile_dir: opt_match.opt_str("profile-dir"),
         full_backtraces: debug_options.full_backtraces,
-        wr_tile_size: wr_tile_size,
-        allow_splitting: allow_splitting,
+        webrender_debug: debug_options.webrender_debug,
     };
 
     set_defaults(opts);

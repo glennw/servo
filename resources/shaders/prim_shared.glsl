@@ -8,7 +8,7 @@
 // Vertex shader attributes and uniforms
 //======================================================================================
 #ifdef WR_VERTEX_SHADER
-    // Attribute inputs
+    uniform int uCmdOffset;
 #endif
 
 //======================================================================================
@@ -99,15 +99,15 @@ struct Clip {
 };*/
 
 layout(std140) uniform Layers {
-    Layer layers[256];
+    Layer layers[315];
 };
 
 layout(std140) uniform Commands {
-    Command commands[512];
+    Command commands[1365];
 };
 
 layout(std140) uniform Primitives {
-    Primitive primitives[512];
+    Primitive primitives[585];
 };
 
 /*
@@ -414,7 +414,7 @@ vec2 write_vertex(Primitive prim, Layer layer) {
 void vs(Command cmd, vec2 layer_pos);
 
 void main() {
-    Command cmd = commands[gl_InstanceID];
+    Command cmd = commands[gl_InstanceID + uCmdOffset];
 
     uint layer_index = cmd.info.x;
     Layer layer = layers[layer_index];

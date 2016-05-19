@@ -4,7 +4,6 @@
 
 void main(void)
 {
-    //vec4 diffuse = vec4(vColorTexCoord.xy, 0, 1);
     vec4 diffuse = texture(sDiffuse, vColorTexCoord.xy);
     oFragColor = vec4(1,1,1,diffuse.a);
 }
