@@ -73,8 +73,9 @@ struct Primitive {
 struct Layer {
     mat4 transform;
     mat4 inv_transform;
-    vec4 screen_vertices[4];
+    //vec4 screen_vertices[4];
     vec4 blend_info;
+    vec4 offset;
 };
 
 struct Command {
@@ -420,7 +421,7 @@ void main() {
     Layer layer = layers[layer_index];
 
     vec2 local_pos = mix(cmd.tile_rect.xy, cmd.tile_rect.zw, aPosition.xy);
-    vec4 pos = layer.transform * vec4(local_pos, 0, 1);
+    vec4 pos = layer.transform * vec4(local_pos + layer.offset.xy, 0, 1);
 
     uint prim_index = cmd.prim_indices.x;
     Primitive prim = primitives[prim_index];
