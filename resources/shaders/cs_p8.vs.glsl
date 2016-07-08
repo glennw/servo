@@ -6,72 +6,14 @@
 
 void main() {
     CompositeTile tile = tiles[gl_InstanceID];
-    vec2 pos = write_vertex(tile);
+    write_vertex(tile);
 
-    vUv0 = write_prim(pos, tile.prim_indices[0].x);
-    vUv1 = write_prim(pos, tile.prim_indices[0].y);
-    vUv2 = write_prim(pos, tile.prim_indices[0].z);
-    vUv3 = write_prim(pos, tile.prim_indices[0].w);
-    vUv4 = write_prim(pos, tile.prim_indices[1].x);
-    vUv5 = write_prim(pos, tile.prim_indices[1].y);
-    vUv6 = write_prim(pos, tile.prim_indices[1].z);
-    vUv7 = write_prim(pos, tile.prim_indices[1].w);
-
-    uint li0 = tile.layer_indices[0].x;
-    uint li1 = tile.layer_indices[0].y;
-    uint li2 = tile.layer_indices[0].z;
-    uint li3 = tile.layer_indices[0].w;
-    uint li4 = tile.layer_indices[1].x;
-    uint li5 = tile.layer_indices[1].y;
-    uint li6 = tile.layer_indices[1].z;
-    uint li7 = tile.layer_indices[1].w;
-
-    if (li0 == INVALID_LAYER_INDEX || li0 == li1) {
-        vLayerValues0.x = 0.0;
-    } else {
-        vLayerValues0.x = layers[li0].blend_info.x;
-    }
-
-    if (li1 == INVALID_LAYER_INDEX || li1 == li2) {
-        vLayerValues0.y = 0.0;
-    } else {
-        vLayerValues0.y = layers[li1].blend_info.x;
-    }
-
-    if (li2 == INVALID_LAYER_INDEX || li2 == li3) {
-        vLayerValues0.z = 0.0;
-    } else {
-        vLayerValues0.z = layers[li2].blend_info.x;
-    }
-
-    if (li3 == INVALID_LAYER_INDEX || li3 == li4) {
-        vLayerValues0.w = 0.0;
-    } else {
-        vLayerValues0.w = layers[li3].blend_info.x;
-    }
-
-    if (li4 == INVALID_LAYER_INDEX || li4 == li5) {
-        vLayerValues1.x = 0.0;
-    } else {
-        vLayerValues1.x = layers[li4].blend_info.x;
-    }
-
-    if (li5 == INVALID_LAYER_INDEX || li5 == li6) {
-        vLayerValues1.y = 0.0;
-    } else {
-        vLayerValues1.y = layers[li5].blend_info.x;
-    }
-
-    if (li6 == INVALID_LAYER_INDEX || li6 == li7) {
-        vLayerValues1.z = 0.0;
-    } else {
-        vLayerValues1.z = layers[li6].blend_info.x;
-    }
-
-    if (li7 == INVALID_LAYER_INDEX) {
-        vLayerValues1.w = 0.0;
-    } else {
-        vLayerValues1.w = layers[li7].blend_info.x;
-    }
-
+    write_prim(tile, 0, vUv0, vLayerValues0.x);
+    write_prim(tile, 1, vUv1, vLayerValues0.y);
+    write_prim(tile, 2, vUv2, vLayerValues0.z);
+    write_prim(tile, 3, vUv3, vLayerValues0.w);
+    write_prim(tile, 4, vUv4, vLayerValues1.x);
+    write_prim(tile, 5, vUv5, vLayerValues1.y);
+    write_prim(tile, 6, vUv6, vLayerValues1.z);
+    write_prim(tile, 7, vUv7, vLayerValues1.w);
 }

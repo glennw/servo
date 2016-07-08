@@ -13,26 +13,11 @@ void main(void) {
     prim_colors[4] = texture(sLayer4, vUv4);
 
     vec4 result = vec4(1, 1, 1, 1);
-    vec4 layer_color = vec4(0, 0, 0, 0);
-
-    layer_color = mix(layer_color, prim_colors[0], prim_colors[0].a);
-    result = mix(result, layer_color, layer_color.a * vLayerValues0.x);
-    layer_color = mix(layer_color, vec4(0, 0, 0, 0), vec4(vLayerValues0.x > 0.0));
-
-    layer_color = mix(layer_color, prim_colors[1], prim_colors[1].a);
-    result = mix(result, layer_color, layer_color.a * vLayerValues0.y);
-    layer_color = mix(layer_color, vec4(0, 0, 0, 0), vec4(vLayerValues0.y > 0.0));
-
-    layer_color = mix(layer_color, prim_colors[2], prim_colors[2].a);
-    result = mix(result, layer_color, layer_color.a * vLayerValues0.z);
-    layer_color = mix(layer_color, vec4(0, 0, 0, 0), vec4(vLayerValues0.z > 0.0));
-
-    layer_color = mix(layer_color, prim_colors[3], prim_colors[3].a);
-    result = mix(result, layer_color, layer_color.a * vLayerValues0.w);
-    layer_color = mix(layer_color, vec4(0, 0, 0, 0), vec4(vLayerValues0.w > 0.0));
-
-    layer_color = mix(layer_color, prim_colors[4], prim_colors[4].a);
-    result = mix(result, layer_color, layer_color.a * vLayerValues1.x);
+    result = mix(result, prim_colors[0], prim_colors[0].a * vLayerValues0.x);
+    result = mix(result, prim_colors[1], prim_colors[1].a * vLayerValues0.y);
+    result = mix(result, prim_colors[2], prim_colors[2].a * vLayerValues0.z);
+    result = mix(result, prim_colors[3], prim_colors[3].a * vLayerValues0.w);
+    result = mix(result, prim_colors[4], prim_colors[4].a * vLayerValues1.x);
 
     oFragColor = result;
 }
