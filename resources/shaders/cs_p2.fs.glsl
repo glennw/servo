@@ -10,14 +10,8 @@ void main(void) {
     prim_colors[1] = texture(sLayer1, vUv1);
 
     vec4 result = vec4(1, 1, 1, 1);
-    vec4 layer_color = vec4(0, 0, 0, 0);
-
-    layer_color = mix(layer_color, prim_colors[0], prim_colors[0].a);
-    result = mix(result, layer_color, layer_color.a * vLayerValues.x);
-    layer_color = mix(layer_color, vec4(0, 0, 0, 0), vec4(vLayerValues.x > 0.0));
-
-    layer_color = mix(layer_color, prim_colors[1], prim_colors[1].a);
-    result = mix(result, layer_color, layer_color.a * vLayerValues.y);
+    result = mix(result, prim_colors[0], prim_colors[0].a * vLayerValues.x);
+    result = mix(result, prim_colors[1], prim_colors[1].a * vLayerValues.y);
 
     oFragColor = result;
 }

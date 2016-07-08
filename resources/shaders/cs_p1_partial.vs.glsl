@@ -6,10 +6,7 @@
 
 void main() {
     CompositeTile tile = tiles[gl_InstanceID];
-    write_vertex(tile);
+    vec2 pos = write_vertex(tile);
 
-    write_prim(tile, 0, vUv0, vLayerValues.x);
-    write_prim(tile, 1, vUv1, vLayerValues.y);
-    write_prim(tile, 2, vUv2, vLayerValues.z);
-    write_prim(tile, 3, vUv3, vLayerValues.w);
+    write_partial_prim(pos, tile.prim_indices[0].x, tile, vUv0, vPartialRects0.x, vLayerValues0.x);
 }

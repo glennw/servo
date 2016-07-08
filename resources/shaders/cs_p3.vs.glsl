@@ -6,31 +6,9 @@
 
 void main() {
     CompositeTile tile = tiles[gl_InstanceID];
-    vec2 pos = write_vertex(tile);
+    write_vertex(tile);
 
-    vUv0 = write_prim(pos, tile.prim_indices[0].x);
-    vUv1 = write_prim(pos, tile.prim_indices[0].y);
-    vUv2 = write_prim(pos, tile.prim_indices[0].z);
-
-    uint li0 = tile.layer_indices[0].x;
-    uint li1 = tile.layer_indices[0].y;
-    uint li2 = tile.layer_indices[0].z;
-
-    if (li0 == INVALID_LAYER_INDEX || li0 == li1) {
-        vLayerValues.x = 0.0;
-    } else {
-        vLayerValues.x = layers[li0].blend_info.x;
-    }
-
-    if (li1 == INVALID_LAYER_INDEX || li1 == li2) {
-        vLayerValues.y = 0.0;
-    } else {
-        vLayerValues.y = layers[li1].blend_info.x;
-    }
-
-    if (li2 == INVALID_LAYER_INDEX) {
-        vLayerValues.z = 0.0;
-    } else {
-        vLayerValues.z = layers[li2].blend_info.x;
-    }
+    write_prim(tile, 0, vUv0, vLayerValues.x);
+    write_prim(tile, 1, vUv1, vLayerValues.y);
+    write_prim(tile, 2, vUv2, vLayerValues.z);
 }
