@@ -69,8 +69,8 @@ void write_prim(CompositeTile tile,
                 int index,
                 out vec2 uv,
                 out float blend_info) {
-    uv = mix(tile.src_rects[index].xy / 4096.0,
-             (tile.src_rects[index].xy + tile.src_rects[index].zw) / 4096.0,
+    uv = mix(tile.src_rects[index].xy / 2048.0,
+             (tile.src_rects[index].xy + tile.src_rects[index].zw) / 2048.0,
              aPosition.xy);
     blend_info = tile.blend_info[index/4][index % 4];
 }
