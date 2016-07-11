@@ -25,7 +25,6 @@ void main(void) {
                          rect.local_rect.xy + rect.local_rect.zw,
                          aPosition.xy);
 
-    vPos = local_pos;
     vClipRect = rect.clip.rect;
     vClipRadius = rect.clip.top_left.outer_inner_radius.x;
 
@@ -36,6 +35,9 @@ void main(void) {
     vec2 clamped_pos = clamp(device_pos,
                              tile.actual_rect.xy,
                              tile.actual_rect.xy + tile.actual_rect.zw);
+
+    vec4 local_clamped_pos = layer.inv_transform * vec4(clamped_pos / uDevicePixelRatio, 0, 1);
+    vPos = local_clamped_pos.xy;
 
     vec2 final_pos = clamped_pos + tile.target_rect.xy - tile.actual_rect.xy;
 
