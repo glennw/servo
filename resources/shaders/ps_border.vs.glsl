@@ -32,9 +32,13 @@ void main(void) {
                              tile.actual_rect.xy,
                              tile.actual_rect.xy + tile.actual_rect.zw);
 
+    vec4 local_clamped_pos = layer.inv_transform * vec4(clamped_pos / uDevicePixelRatio, 0, 1);
+
     vec2 final_pos = clamped_pos + tile.target_rect.xy - tile.actual_rect.xy;
 
     gl_Position = uTransform * vec4(final_pos, 0, 1);
+
+    vRadii = border.radii;
 
     float w = border.local_rect.z;
     float h = border.local_rect.w;
@@ -45,40 +49,44 @@ void main(void) {
             y0 = border.local_rect.y;
             x1 = border.local_rect.x + border.local_rect.z;
             y1 = border.local_rect.y + border.local_rect.w;
+            vRefPoint = vec2(x0, y0) + vRadii.xy;
             break;
         case PST_TOP_RIGHT:
+            vRefPoint = border.local_rect.xy + vRadii.xy;
             x0 = border.local_rect.x + border.local_rect.z;
             y0 = border.local_rect.y;
             x1 = border.local_rect.x;
             y1 = border.local_rect.y + border.local_rect.w;
+            vRefPoint = vec2(x0, y0) + vec2(-vRadii.x, vRadii.y);
             break;
         case PST_BOTTOM_LEFT:
             x0 = border.local_rect.x;
             y0 = border.local_rect.y + border.local_rect.w;
             x1 = border.local_rect.x + border.local_rect.z;
             y1 = border.local_rect.y;
+            vRefPoint = vec2(x0, y0) + vec2(vRadii.x, -vRadii.y);
             break;
         case PST_BOTTOM_RIGHT:
             x0 = border.local_rect.x;
             y0 = border.local_rect.y;
             x1 = border.local_rect.x + border.local_rect.z;
             y1 = border.local_rect.y + border.local_rect.w;
+            vRefPoint = vec2(x1, y1) + vec2(-vRadii.x, -vRadii.y);
             break;
         case PST_TOP:
         case PST_LEFT:
         case PST_BOTTOM:
         case PST_RIGHT:
+            vRefPoint = border.local_rect.xy;
             x0 = border.local_rect.x;
             y0 = border.local_rect.y;
             x1 = border.local_rect.x + border.local_rect.z;
             y1 = border.local_rect.y + border.local_rect.w;
             break;
     }
-    vF = (local_pos.x - x0) * (y1 - y0) - (local_pos.y - y0) * (x1 - x0);
+    vF = (local_clamped_pos.x - x0) * (y1 - y0) - (local_clamped_pos.y - y0) * (x1 - x0);
 
     vColor0 = border.color0;
     vColor1 = border.color1;
-    vRadii = border.radii;
-    vRefPoint = border.local_rect.xy + vRadii.xy;
-    vPos = local_pos.xy;
+    vPos = local_clamped_pos.xy;
 }

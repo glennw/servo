@@ -3,8 +3,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 void main(void) {
-	if (distance(vRefPoint, vPos) > 16.0) {
-		//discard;
+	if (vRadii.x > 0.0 &&
+		(distance(vRefPoint, vPos) > vRadii.x ||
+		 distance(vRefPoint, vPos) < vRadii.z)) {
+		discard;
 	}
 
     if (vF > 0.0) {
