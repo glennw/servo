@@ -15,7 +15,7 @@ void main(void) {
     prim_colors[6] = texture(sLayer6, vUv6);
     prim_colors[7] = texture(sLayer7, vUv7);
 
-    vec4 result = vec4(1, 1, 1, 1);
+    vec4 result = fetch_initial_color();
     result = mix(result, prim_colors[0], prim_colors[0].a * vLayerValues0.x);
     result = mix(result, prim_colors[1], prim_colors[1].a * vLayerValues0.y);
     result = mix(result, prim_colors[2], prim_colors[2].a * vLayerValues0.z);
