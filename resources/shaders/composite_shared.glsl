@@ -18,35 +18,15 @@ uniform sampler2D sLayer6;
 uniform sampler2D sLayer7;
 uniform sampler2D sCache;
 
-/*
-struct Renderable {
-    mat4 transform;
-    vec4 local_rect;
-    ivec4 cache_rect;
-    ivec4 screen_rect;
-    vec4 st_rect;
-    vec4 local_offset_blend_info;
-};
-
-layout(std140) uniform Renderables {
-    Renderable renderables[400];
-};*/
-
 struct CompositeTile {
     ivec4 rect;
     ivec4 src_rects[MAX_PRIMS_PER_COMPOSITE];
     vec4 blend_info[MAX_PRIMS_PER_COMPOSITE/4];
-    //uvec4 prim_count;
-    //uvec4 prim_indices[MAX_PRIMS_PER_COMPOSITE/4];
 };
 
 layout(std140) uniform Tiles {
     CompositeTile tiles[256];
 };
-
-/*
-varying vec2 vTilePos;
-*/
 
 #ifdef WR_VERTEX_SHADER
 

@@ -13,21 +13,6 @@
 #define PST_BOTTOM       uint(7)
 #define PST_RIGHT        uint(8)
 
-/*
-struct Renderable {
-    mat4 transform;
-    vec4 local_rect;
-    ivec4 cache_rect;
-    ivec4 screen_rect;
-    vec4 st_rect;
-    vec4 local_offset_blend_info;
-};
-
-layout(std140) uniform Renderables {
-    Renderable renderables[400];
-};
-*/
-
 struct Layer {
     mat4 transform;
     mat4 inv_transform;
@@ -59,45 +44,11 @@ struct ClipCorner {
 
 struct Clip {
     vec4 rect;
-    uvec4 clip_kind_layer_p2;
     ClipCorner top_left;
     ClipCorner top_right;
     ClipCorner bottom_left;
     ClipCorner bottom_right;
 };
-
-/*
-#define CORNER_TOP_LEFT     uint(0)
-#define CORNER_TOP_RIGHT    uint(1)
-#define CORNER_BOTTOM_LEFT  uint(2)
-#define CORNER_BOTTOM_RIGHT uint(3)
-
-struct ClipCorner {
-    vec4 rect;
-    vec4 outer_inner_radius;
-};
-
-struct Clip {
-    vec4 rect;
-    uvec4 clip_kind_layer_p2;
-    ClipCorner top_left;
-    ClipCorner top_right;
-    ClipCorner bottom_left;
-    ClipCorner bottom_right;
-};
-*/
-
-/*
-struct Layer {
-    mat4 transform;
-    mat4 inv_transform;
-    vec4 screen_vertices[4];
-    vec4 blend_info;
-};
-
-layout(std140) uniform Layers {
-    Layer layers[256];
-};*/
 
 bool ray_plane(vec3 normal, vec3 point, vec3 ray_origin, vec3 ray_dir, out float t)
 {
@@ -133,8 +84,8 @@ vec3 get_layer_pos(vec2 pos, uint layer_index) {
     return local_pos.xyw;
 }
 
-/*
-float do_clip(vec2 pos, vec4 clip_rect, float radius) {
+#ifdef WR_FRAGMENT_SHADER
+void do_clip(vec2 pos, vec4 clip_rect, float radius) {
     vec2 ref_tl = clip_rect.xy + vec2( radius,  radius);
     vec2 ref_tr = clip_rect.zy + vec2(-radius,  radius);
     vec2 ref_bl = clip_rect.xw + vec2( radius, -radius);
@@ -152,9 +103,7 @@ float do_clip(vec2 pos, vec4 clip_rect, float radius) {
 
     // TODO(gw): Alpha anti-aliasing based on edge distance!
     if (out0 || out1 || out2 || out3) {
-        return 0.0;
-    } else {
-        return 1.0;
+        discard;
     }
 }
 
@@ -164,4 +113,4 @@ bool point_in_rect(vec2 p, vec2 p0, vec2 p1) {
            p.x <= p1.x &&
            p.y <= p1.y;
 }
-*/
+#endif
