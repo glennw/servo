@@ -7,10 +7,13 @@ struct BoxShadow {
 	PrimitiveInfo info;
 	vec4 local_rect;
 	vec4 color;
+    vec4 border_radii_blur_radius_inverted;
+    vec4 bs_rect;
+    vec4 src_rect;
 };
 
 layout(std140) uniform Items {
-    BoxShadow boxshadows[1024];
+    BoxShadow boxshadows[512];
 };
 
 void main(void) {
@@ -33,6 +36,16 @@ void main(void) {
                              tile.actual_rect.xy + tile.actual_rect.zw);
 
     vec2 final_pos = clamped_pos + tile.target_rect.xy - tile.actual_rect.xy;
+
+    vec4 local_clamped_pos = layer.inv_transform * vec4(clamped_pos / uDevicePixelRatio, 0, 1);
+
+    vPos = local_clamped_pos.xy;
+    vColor = bs.color;
+    vBorderRadii = bs.border_radii_blur_radius_inverted.xy;
+    vBlurRadius = bs.border_radii_blur_radius_inverted.z;
+    vBoxShadowRect = vec4(bs.bs_rect.xy, bs.bs_rect.xy + bs.bs_rect.zw);
+    vSrcRect = vec4(bs.src_rect.xy, bs.src_rect.xy + bs.src_rect.zw);
+    vInverted = bs.border_radii_blur_radius_inverted.w;
 
     gl_Position = uTransform * vec4(final_pos, 0, 1);
 }
