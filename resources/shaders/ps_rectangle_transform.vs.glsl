@@ -18,8 +18,6 @@ void main(void) {
     Layer layer = layers[rect.info.layer_tile_part.x];
     Tile tile = tiles[rect.info.layer_tile_part.y];
 
-    vColor = vec4(aPosition.xy, 0, 1);
-
     vec2 p0 = rect.local_rect.xy;
     vec2 p1 = rect.local_rect.xy + vec2(rect.local_rect.z, 0.0);
     vec2 p2 = rect.local_rect.xy + vec2(0.0, rect.local_rect.w);
@@ -54,6 +52,7 @@ void main(void) {
 
     vRect = rect.local_rect;
     vPos = layer_pos;
+    vColor = rect.color;
 
     vec2 final_pos = clamped_pos + tile.target_rect.xy - tile.actual_rect.xy;
 

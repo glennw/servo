@@ -5,10 +5,9 @@
 void main(void) {
     vec2 pos = vPos.xy / vPos.z;
 
-    if (point_in_rect(pos, vRect.xy, vRect.xy + vRect.zw)) {
-        oFragColor = vec4(0,1,0,1);
-        return;
+    if (!point_in_rect(pos, vRect.xy, vRect.xy + vRect.zw)) {
+	    discard;
     }
 
-    oFragColor = vColor;
+	oFragColor = vColor;
 }
