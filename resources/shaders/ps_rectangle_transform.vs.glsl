@@ -10,7 +10,7 @@ struct Rectangle {
 };
 
 layout(std140) uniform Items {
-    Rectangle rects[1024];
+    Rectangle rects[WR_MAX_PRIM_ITEMS];
 };
 
 void main(void) {

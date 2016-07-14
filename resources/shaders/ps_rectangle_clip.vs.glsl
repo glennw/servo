@@ -11,7 +11,7 @@ struct Rectangle {
 };
 
 layout(std140) uniform Items {
-    Rectangle rects[256];
+    Rectangle rects[WR_MAX_PRIM_ITEMS];
 };
 
 void main(void) {

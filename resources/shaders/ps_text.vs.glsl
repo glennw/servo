@@ -11,7 +11,7 @@ struct Glyph {
 };
 
 layout(std140) uniform Items {
-    Glyph glyphs[1024];
+    Glyph glyphs[WR_MAX_PRIM_ITEMS];
 };
 
 void main(void) {

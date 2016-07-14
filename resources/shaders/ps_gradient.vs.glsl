@@ -15,7 +15,7 @@ struct Gradient {
 };
 
 layout(std140) uniform Items {
-    Gradient gradients[512];
+    Gradient gradients[WR_MAX_PRIM_ITEMS];
 };
 
 void main(void) {

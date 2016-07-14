@@ -13,7 +13,7 @@ struct BoxShadow {
 };
 
 layout(std140) uniform Items {
-    BoxShadow boxshadows[512];
+    BoxShadow boxshadows[WR_MAX_PRIM_ITEMS];
 };
 
 void main(void) {

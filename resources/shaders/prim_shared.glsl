@@ -21,7 +21,7 @@ struct Layer {
 };
 
 layout(std140) uniform Layers {
-    Layer layers[256];
+    Layer layers[WR_MAX_PRIM_LAYERS];
 };
 
 struct Tile {
@@ -30,7 +30,7 @@ struct Tile {
 };
 
 layout(std140) uniform Tiles {
-    Tile tiles[400];
+    Tile tiles[WR_MAX_PRIM_TILES];
 };
 
 struct PrimitiveInfo {

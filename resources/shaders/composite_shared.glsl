@@ -25,7 +25,7 @@ struct CompositeTile {
 };
 
 layout(std140) uniform Tiles {
-    CompositeTile tiles[256];
+    CompositeTile tiles[WR_MAX_COMPOSITE_TILES];
 };
 
 #ifdef WR_VERTEX_SHADER

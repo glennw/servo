@@ -10,7 +10,7 @@ struct Image {
 };
 
 layout(std140) uniform Items {
-    Image images[1024];
+    Image images[WR_MAX_PRIM_ITEMS];
 };
 
 void main(void) {

@@ -12,7 +12,7 @@ struct Border {
 };
 
 layout(std140) uniform Items {
-    Border borders[200];
+    Border borders[WR_MAX_PRIM_ITEMS];
 };
 
 void main(void) {
