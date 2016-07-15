@@ -35,6 +35,7 @@ layout(std140) uniform Tiles {
 
 struct PrimitiveInfo {
     uvec4 layer_tile_part;
+    vec4 local_clip_rect;
 };
 
 struct ClipCorner {

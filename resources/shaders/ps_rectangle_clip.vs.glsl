@@ -25,6 +25,10 @@ void main(void) {
                          rect.local_rect.xy + rect.local_rect.zw,
                          aPosition.xy);
 
+    local_pos = clamp(local_pos,
+                      rect.info.local_clip_rect.xy,
+                      rect.info.local_clip_rect.xy + rect.info.local_clip_rect.zw);
+
     vClipRect = rect.clip.rect;
     vClipRadius = rect.clip.top_left.outer_inner_radius.x;
 
