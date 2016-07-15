@@ -3,5 +3,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 void main(void) {
-    oFragColor = texture(sDiffuse, vUv);
+    vec2 st = vTextureOffset + vTextureSize * fract(vUv);
+    oFragColor = texture(sDiffuse, st);
 }
