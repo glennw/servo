@@ -21,9 +21,10 @@ void main(void) {
 
     vColor = glyph.color;
 
-    vec2 local_pos = mix(glyph.local_rect.xy,
-                         glyph.local_rect.xy + glyph.local_rect.zw,
-                         aPosition.xy);
+    vec2 p0 = floor(0.5 + glyph.local_rect.xy * uDevicePixelRatio) / uDevicePixelRatio;
+    vec2 p1 = p0 + glyph.local_rect.zw;
+
+    vec2 local_pos = mix(p0, p1, aPosition.xy);
 
     vec4 world_pos = layer.transform * vec4(local_pos, 0, 1);
 
@@ -35,7 +36,7 @@ void main(void) {
 
     vec4 local_clamped_pos = layer.inv_transform * vec4(clamped_pos / uDevicePixelRatio, 0, 1);
 
-    vec2 f = (local_clamped_pos.xy - glyph.local_rect.xy) / glyph.local_rect.zw;
+    vec2 f = (local_clamped_pos.xy - p0) / glyph.local_rect.zw;
 
     vUv = mix(glyph.st_rect.xy,
               glyph.st_rect.zw,
