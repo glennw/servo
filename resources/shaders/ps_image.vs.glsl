@@ -24,6 +24,10 @@ void main(void) {
                          image.local_rect.xy + image.local_rect.zw,
                          aPosition.xy);
 
+    local_pos = clamp(local_pos,
+                      image.info.local_clip_rect.xy,
+                      image.info.local_clip_rect.xy + image.info.local_clip_rect.zw);
+
     vec4 world_pos = layer.transform * vec4(local_pos, 0, 1);
 
     vec2 device_pos = world_pos.xy * uDevicePixelRatio;
