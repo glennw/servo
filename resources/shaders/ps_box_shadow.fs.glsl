@@ -147,5 +147,5 @@ void main(void) {
     float value = color(pos, p0Rect, p1Rect, radii, sigma);
 
     value = max(value, 0.0);
-    oFragColor = vec4(vColor.rgb, vColor.a == 0.0 ? 1.0 - value : value);
+    oFragColor = vec4(vColor.rgb, vInverted == 1.0 ? 1.0 - value : value);
 }
