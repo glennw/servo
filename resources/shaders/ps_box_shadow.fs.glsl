@@ -140,15 +140,12 @@ float color(vec2 pos, vec2 p0Rect, vec2 p1Rect, vec2 radii, float sigma) {
 }
 
 void main(void) {
-    oFragColor = vColor;
-    /*
     vec2 pos = vPos.xy;
-    vec2 p0Rect = vBoxShadowRect.xy, p1Rect = vBoxShadowRect.xy + vBoxShadowRect.zw;
+    vec2 p0Rect = vBoxShadowRect.xy, p1Rect = vBoxShadowRect.zw;
     vec2 radii = vBorderRadii.xy;
     float sigma = vBlurRadius / 2.0;
     float value = color(pos, p0Rect, p1Rect, radii, sigma);
 
     value = max(value, 0.0);
     oFragColor = vec4(vColor.rgb, vColor.a == 0.0 ? 1.0 - value : value);
-    */
 }
