@@ -2,6 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+uniform sampler2D sCache;
+
 void main(void) {
-    oFragColor = vec4(1, 1, 0, 1);
+    oFragColor = texture(sCache, vUv);
 }
