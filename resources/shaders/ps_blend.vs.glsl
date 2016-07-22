@@ -23,6 +23,7 @@ void main(void) {
     vec2 st0 = blend.src_rect.xy / 2048.0;
     vec2 st1 = (blend.src_rect.xy + blend.src_rect.zw) / 2048.0;
     vUv = mix(st0, st1, aPosition.xy);
+    vOpacity = blend.opacity.x;
 
     gl_Position = uTransform * vec4(local_pos, 0, 1);
 }
