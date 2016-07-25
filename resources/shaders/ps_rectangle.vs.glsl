@@ -36,6 +36,10 @@ void main(void) {
                              tile.actual_rect.xy,
                              tile.actual_rect.xy + tile.actual_rect.zw);
 
+    clamped_pos = clamp(clamped_pos,
+                        layer.world_clip_rect.xy,
+                        layer.world_clip_rect.xy + layer.world_clip_rect.zw);
+
     vec2 final_pos = clamped_pos + tile.target_rect.xy - tile.actual_rect.xy;
 
     gl_Position = uTransform * vec4(final_pos, 0, 1);
