@@ -29,7 +29,6 @@ struct Layer {
     mat4 transform;
     mat4 inv_transform;
     vec4 screen_vertices[4];
-    vec4 blend_info;
 };
 
 layout(std140) uniform Layers {
