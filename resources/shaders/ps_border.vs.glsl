@@ -124,8 +124,10 @@ void main(void) {
     vColor0 = border.color0;
     vColor1 = border.color1;
 
+    // Local space
+    vPos = local_clamped_pos.xy;
+
     // These are in device space
-    vPos = clamped_pos;
     vBorders = vec4(border.local_rect.x, border.local_rect.y,
                     border.local_rect.z,
                     border.local_rect.w) * uDevicePixelRatio;
