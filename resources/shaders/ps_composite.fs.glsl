@@ -297,7 +297,7 @@ void main(void) {
         case COMPOSITE_KIND_FILTER:
             if (op == 0) {
                 // Gaussian blur is specially handled:
-                result = Blur(amount, vec2(0,0));
+                result = Cs;// Blur(amount, vec2(0,0));
             } else {
                 if (op == 1) {
                     result = Contrast(Cs, amount);
