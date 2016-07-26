@@ -21,13 +21,12 @@ void main(void) {
 
     // Our location within the image
     vec2 p0 = floor(0.5 + image.local_rect.xy * uDevicePixelRatio) / uDevicePixelRatio;
-    vec2 p1 = p0 + image.local_rect.zw;
+    vec2 p1 = floor(0.5 + (image.local_rect.xy + image.local_rect.zw) * uDevicePixelRatio) / uDevicePixelRatio;
 
     vec2 local_pos = mix(p0, p1, aPosition.xy);
 
     vec2 cp0 = floor(0.5 + image.info.local_clip_rect.xy * uDevicePixelRatio) / uDevicePixelRatio;
-    vec2 cp1 = cp0 + image.info.local_clip_rect.zw;
-
+    vec2 cp1 = floor(0.5 + (image.info.local_clip_rect.xy + image.info.local_clip_rect.zw) * uDevicePixelRatio) / uDevicePixelRatio;
     local_pos = clamp(local_pos, cp0, cp1);
 
     vec4 world_pos = layer.transform * vec4(local_pos, 0, 1);
