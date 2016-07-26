@@ -20,13 +20,15 @@ void main(void) {
     Tile tile = tiles[image.info.layer_tile_part.y];
 
     // Our location within the image
-    vec2 local_pos = mix(image.local_rect.xy,
-                         image.local_rect.xy + image.local_rect.zw,
-                         aPosition.xy);
+    vec2 p0 = floor(0.5 + image.local_rect.xy * uDevicePixelRatio) / uDevicePixelRatio;
+    vec2 p1 = p0 + image.local_rect.zw;
 
-    local_pos = clamp(local_pos,
-                      image.info.local_clip_rect.xy,
-                      image.info.local_clip_rect.xy + image.info.local_clip_rect.zw);
+    vec2 local_pos = mix(p0, p1, aPosition.xy);
+
+    vec2 cp0 = floor(0.5 + image.info.local_clip_rect.xy * uDevicePixelRatio) / uDevicePixelRatio;
+    vec2 cp1 = cp0 + image.info.local_clip_rect.zw;
+
+    local_pos = clamp(local_pos, cp0, cp1);
 
     vec4 world_pos = layer.transform * vec4(local_pos, 0, 1);
 
@@ -39,7 +41,7 @@ void main(void) {
     vec4 local_clamped_pos = layer.inv_transform * vec4(clamped_pos / uDevicePixelRatio, 0, 1);
 
     // vUv will contain how many times this image has wrapped around the image size.
-    vUv = (local_clamped_pos.xy - image.local_rect.xy) / image.stretch_size.xy;
+    vUv = (local_clamped_pos.xy - p0) / image.stretch_size.xy;
     vTextureSize = image.st_rect.zw - image.st_rect.xy;
     vTextureOffset = image.st_rect.xy;
 

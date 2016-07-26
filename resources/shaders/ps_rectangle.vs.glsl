@@ -20,9 +20,10 @@ void main(void) {
 
     vColor = rect.color;
 
-    vec2 local_pos = mix(rect.local_rect.xy,
-                         rect.local_rect.xy + rect.local_rect.zw,
-                         aPosition.xy);
+    vec2 p0 = floor(0.5 + rect.local_rect.xy * uDevicePixelRatio) / uDevicePixelRatio;
+    vec2 p1 = p0 + rect.local_rect.zw;
+
+    vec2 local_pos = mix(p0, p1, aPosition.xy);
 
     local_pos = clamp(local_pos,
                       rect.info.local_clip_rect.xy,
