@@ -149,21 +149,21 @@ VertexInfo write_vertex(PrimitiveInfo info) {
 #endif
 
 #ifdef WR_FRAGMENT_SHADER
-void do_clip(vec2 pos, vec4 clip_rect, float radius) {
-    vec2 ref_tl = clip_rect.xy + vec2( radius,  radius);
-    vec2 ref_tr = clip_rect.zy + vec2(-radius,  radius);
-    vec2 ref_bl = clip_rect.xw + vec2( radius, -radius);
-    vec2 ref_br = clip_rect.zw + vec2(-radius, -radius);
+void do_clip(vec2 pos, vec4 clip_rect, vec4 radius) {
+    vec2 ref_tl = clip_rect.xy + vec2( radius.x,  radius.x);
+    vec2 ref_tr = clip_rect.zy + vec2(-radius.y,  radius.y);
+    vec2 ref_br = clip_rect.zw + vec2(-radius.z, -radius.z);
+    vec2 ref_bl = clip_rect.xw + vec2( radius.w, -radius.w);
 
     float d_tl = distance(pos, ref_tl);
     float d_tr = distance(pos, ref_tr);
-    float d_bl = distance(pos, ref_bl);
     float d_br = distance(pos, ref_br);
+    float d_bl = distance(pos, ref_bl);
 
-    bool out0 = pos.x < ref_tl.x && pos.y < ref_tl.y && d_tl > radius;
-    bool out1 = pos.x > ref_tr.x && pos.y < ref_tr.y && d_tr > radius;
-    bool out2 = pos.x < ref_bl.x && pos.y > ref_bl.y && d_bl > radius;
-    bool out3 = pos.x > ref_br.x && pos.y > ref_br.y && d_br > radius;
+    bool out0 = pos.x < ref_tl.x && pos.y < ref_tl.y && d_tl > radius.x;
+    bool out1 = pos.x > ref_tr.x && pos.y < ref_tr.y && d_tr > radius.y;
+    bool out2 = pos.x > ref_br.x && pos.y > ref_br.y && d_br > radius.z;
+    bool out3 = pos.x < ref_bl.x && pos.y > ref_bl.y && d_bl > radius.w;
 
     // TODO(gw): Alpha anti-aliasing based on edge distance!
     if (out0 || out1 || out2 || out3) {
