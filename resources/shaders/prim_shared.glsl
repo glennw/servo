@@ -130,6 +130,10 @@ VertexInfo write_vertex(PrimitiveInfo info) {
                              tile.actual_rect.xy,
                              tile.actual_rect.xy + tile.actual_rect.zw);
 
+    clamped_pos = clamp(clamped_pos,
+                        layer.world_clip_rect.xy,
+                        layer.world_clip_rect.xy + layer.world_clip_rect.zw);
+
     vec4 local_clamped_pos = layer.inv_transform * vec4(clamped_pos / uDevicePixelRatio, 0, 1);
 
     vec2 final_pos = clamped_pos + tile.target_rect.xy - tile.actual_rect.xy;
