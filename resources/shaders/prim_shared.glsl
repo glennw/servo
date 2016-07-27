@@ -124,6 +124,7 @@ VertexInfo write_vertex(PrimitiveInfo info) {
     local_pos = clamp(local_pos, cp0, cp1);
 
     vec4 world_pos = layer.transform * vec4(local_pos, 0, 1);
+    world_pos.xyz /= world_pos.w;
 
     vec2 device_pos = world_pos.xy * uDevicePixelRatio;
 
@@ -135,7 +136,8 @@ VertexInfo write_vertex(PrimitiveInfo info) {
                         layer.world_clip_rect.xy,
                         layer.world_clip_rect.xy + layer.world_clip_rect.zw);
 
-    vec4 local_clamped_pos = layer.inv_transform * vec4(clamped_pos / uDevicePixelRatio, 0, 1);
+    vec4 local_clamped_pos = layer.inv_transform * vec4(clamped_pos / uDevicePixelRatio, world_pos.z, 1);
+    local_clamped_pos.xyz /= local_clamped_pos.w;
 
     vec2 final_pos = clamped_pos + tile.target_rect.xy - tile.actual_rect.xy;
 
