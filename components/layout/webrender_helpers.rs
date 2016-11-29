@@ -340,9 +340,13 @@ impl WebRenderDisplayItemConverter for DisplayItem {
                     ScrollPolicy::FixedPosition => webrender_traits::ScrollPolicy::Fixed,
                 };
 
+                let clip = builder.new_clip_region(&stacking_context.overflow.to_rectf(),
+                                                   vec![],
+                                                   None);
+
                 builder.push_stacking_context(webrender_scroll_policy,
                                               stacking_context.bounds.to_rectf(),
-                                              stacking_context.overflow.to_rectf(),
+                                              clip,
                                               stacking_context.z_index,
                                               &stacking_context.transform,
                                               &stacking_context.perspective,
