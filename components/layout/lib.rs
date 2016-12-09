@@ -11,7 +11,7 @@
 #![feature(raw)]
 #![feature(step_by)]
 
-#![deny(unsafe_code)]
+// #![deny(unsafe_code)]
 
 #![plugin(plugins)]
 
