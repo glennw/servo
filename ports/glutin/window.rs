@@ -1179,6 +1179,13 @@ impl WindowMethods for Window {
     }
 
     fn prepare_for_composite(&self, _width: usize, _height: usize) -> bool {
+        match self.kind {
+            WindowKind::Window(ref window) => {
+                unsafe { window.make_current().expect("Failed to make context current!") };
+            }
+            WindowKind::Headless(..) => {}
+        }
+
         true
     }
 

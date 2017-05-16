@@ -137,30 +137,35 @@ fn main() {
         process::exit(0);
     }
 
-    let window = app::create_window(None);
+    let window1 = app::create_window(None);
+    let window2 = app::create_window(None);
 
     // Our wrapper around `Browser` that also implements some
     // callbacks required by the glutin window implementation.
-    let mut browser = BrowserWrapper {
-        browser: Browser::new(window.clone()),
+    let mut browser1 = BrowserWrapper {
+        browser: Browser::new(window1.clone()),
     };
 
-    browser.browser.setup_logging();
+    let mut browser2 = BrowserWrapper {
+        browser: Browser::new(window2.clone()),
+    };
 
-    register_glutin_resize_handler(&window, &mut browser);
+    //browser1.browser.setup_logging();
+    //browser2.browser.setup_logging();
 
-    browser.browser.handle_events(vec![WindowEvent::InitializeCompositing]);
+    //register_glutin_resize_handler(&window, &mut browser);
+
+    browser1.browser.handle_events(vec![WindowEvent::InitializeCompositing]);
+    browser2.browser.handle_events(vec![WindowEvent::InitializeCompositing]);
 
     // Feed events from the window to the browser until the browser
     // says to stop.
     loop {
-        let should_continue = browser.browser.handle_events(window.wait_events());
-        if !should_continue {
-            break;
-        }
+        browser1.browser.handle_events(window1.wait_events());
+        browser2.browser.handle_events(window2.wait_events());
     }
 
-    unregister_glutin_resize_handler(&window);
+    //unregister_glutin_resize_handler(&window);
 
     platform::deinit()
 }

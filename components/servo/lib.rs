@@ -126,6 +126,7 @@ impl<Window> Browser<Window> where Window: WindowMethods + 'static {
         // Global configuration options, parsed from the command line.
         let opts = opts::get();
 
+        window.prepare_for_composite(0, 0);
 
         // Get both endpoints of a special channel for communication between
         // the client window and the compositor. This channel is unique because
