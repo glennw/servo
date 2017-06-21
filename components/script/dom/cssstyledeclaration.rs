@@ -85,8 +85,9 @@ impl CSSStyleOwner {
                     //
                     // [1]: https://github.com/whatwg/html/issues/2306
                     if let Some(pdb) = attr {
-                        let guard = shared_lock.read();
-                        let serialization = pdb.read_with(&guard).to_css_string();
+                        //let guard = shared_lock.read();
+                        //let serialization = pdb.read_with(&guard).to_css_string();
+                        let serialization = String::new();
                         el.set_attribute(&local_name!("style"),
                                          AttrValue::Declaration(serialization,
                                                                 pdb));
